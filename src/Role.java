@@ -4,7 +4,7 @@ public class Role {
     private String name;
     private String flavorLine;
     private int rankRequired;
-    private Player worker;
+    private TempPlayer worker;
 
     public Role(){
         // Called exclusively from parsers
@@ -14,4 +14,7 @@ public class Role {
         // checks if the calling player is able to take the role, if so, takes it
         return false;
     }
+}
+
+class TempPlayer{
 }
