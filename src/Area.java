@@ -7,4 +7,8 @@ public abstract class Area {
     public String toString(){
         return null;
     }
+
+    public String getName() {
+        return name;
+    }
 }

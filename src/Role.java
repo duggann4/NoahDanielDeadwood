@@ -32,6 +32,10 @@ public class Role {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String toString(){
         return name + ", \"" + flavorLine + "\" requires rank " + rankRequired;
     }
