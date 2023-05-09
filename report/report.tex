@@ -1,0 +1,38 @@
+\documentclass[letterpaper, twoside]{report}
+
+\title{CSCI 345: Cohesion/Coupling Write-up}
+\author{Noah Duggan Erickson, Daniel Wertz}
+\date{09 May 2023}
+
+\begin{document}
+\maketitle
+
+\chapter{Cohesion}
+\begin{itemize}
+    \item Deadwood:
+    \item Area:
+    \item Board:
+    \item BoardParser: Functional, as all public-facing methods are focused on the creation of the board; private methods are helpers in this endeavor
+    \item CardParser: Functional, as all public-facing methods are focused on the creation of the card deck; private methods are helpers to this objective
+    \item Player:
+    \item Role:
+    \item Scene:
+    \item Set:
+\end{itemize}
+\chapter{Coupling}
+\begin{itemize}
+    \item Deadwood \& Board:
+    \item Deadwood \& Player:
+    \item Board \& Area:
+    \item Board \& Scene:
+    \item BoardParser \& Set: External via reliance on ArrayList
+    \item BoardParser \& Role: External via reliance on ArrayList
+    \item CardParser \& Scene: External via reliance on ArrayList, but also data, since setters are minimal
+    \item CardParser \& Role: External Coupling via reliance on ArrayList
+    \item Player \& Role:
+    \item Player \& Area:
+    \item Scene \& Role: External via reliance on ArrayList
+    \item Set \& Scene:
+    \item Set \& Role: External via reliance on ArrayList
+\end{itemize}
+\end{document}
