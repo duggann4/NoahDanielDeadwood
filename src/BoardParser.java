@@ -14,10 +14,6 @@ public class BoardParser {
         openFile(filepath);
     }
 
-    public static void main(String[] args){
-        BoardParser bp = new BoardParser("../data/board.xml");
-        bp.readBoard();
-    }
     public static ArrayList<Set> readBoard(){
         ArrayList<Set> out = new ArrayList<Set>();
         while(scan.hasNextLine()){
@@ -54,7 +50,6 @@ public class BoardParser {
                 readParts(line, s);
             }
         }
-        System.out.println(s);
         return s;
     }
 
