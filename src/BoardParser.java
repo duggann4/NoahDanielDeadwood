@@ -1,10 +1,59 @@
 package src;
 
+/**
+ * Title: BoardParser
+ * Author: Noah Duggan Erickson
+ * CSCI 345
+ * Spring 2023
+ * 
+ * DESCRIPTION:
+ *  Reads and parses an xml file containing board-related information in the
+ *      format specified below into objects that are used elsewhere in the
+ *      program.
+ * 
+ *  File Format:
+ *      The element containing set data must be called "set" with the name
+ *          as attribute.
+ *      Set elements must have children "neighbors", "takes", and "parts".
+ *      Neighbors elements can contain any number of "neighbor" children
+ *          containing other location names.
+ *      Takes can contain any number of "take" children with arbitrary content.
+ *      Parts can contain any number of roles, as specified in Parser.
+ * 
+ * CONSTRUCTORS:
+ *  BoardParser(String filepath)
+ *      Constructs a new BoardParser object and attempts to open the file
+ *          at provided path
+ *      Author: Noah Duggan Erickson
+ *      Parameters:
+ *          filepath - path to the file to parse
+ *              REPO INFO: If the structure of the NoahDanielDeadwood repo
+ *                  is unchanged, path is "../data/board.xml"
+ *      Error codes:
+ *          51: Problem opening file
+ * 
+ * METHODS:
+ *  public ArrayList<Set> readBoard()
+ *      Executes the parser on the provided file
+ *      Author: Noah Duggan Erickson
+ *      Returns:
+ *          ArrayList containing Set objects read from the file
+ * 
+ * INHERITED METHODS:
+ *  Standard java.lang.Object inheritance
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Arrays;
+
+/*
+ * Noah's TODO list:
+ *  1. Create parsers for <trailers> and <office>
+ *  1a. Create corresponding classes, implements Area
+ */
 
 public class BoardParser extends Parser{
 
