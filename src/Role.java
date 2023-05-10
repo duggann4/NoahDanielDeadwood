@@ -11,8 +11,8 @@ package src;
  *      roles, both on and off-card.
  * 
  * CONSTRUCTORS:
- *  public Scene()
- *      Creates a new Scene object with non-null but empty field values
+ *  public Role()
+ *      Creates a new Role object with non-null but empty field values
  *      Author: Noah Duggan Erickson
  * 
  * METHODS:
