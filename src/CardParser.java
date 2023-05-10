@@ -9,9 +9,7 @@ import java.util.Arrays;
 
 // ERROR EXIT CODES:
 //   51: Could not open cards.xml
-public class CardParser {
-    private static File f;
-    private static Scanner scan;
+public class CardParser extends Parser{
 
     public CardParser(String filepath){
         openFile(filepath);
@@ -26,16 +24,6 @@ public class CardParser {
             }
         }
         return out;
-    }
-
-    private static void openFile(String path){
-        try{
-            f = new File(path);
-            scan = new Scanner(f);
-        } catch(IOException e){
-            System.err.println("Problem opening file!");
-            System.exit(51);
-        }
     }
 
     private static Scene readCard(String line){
@@ -65,21 +53,4 @@ public class CardParser {
         }
         s.setFlavor(sceneNo, flavorText);
     }
-
-    private static Role readPart(String line){
-        Role role = new Role();
-        String flavorText = "";
-        String[] attrs = line.split("\"");
-        role.setBasic(attrs[1], Integer.parseInt(attrs[3]));
-        line = scan.nextLine();
-        while(!line.contains("</part>")){
-            if(line.contains("<line>")){
-                flavorText = line.replaceAll("<line>", "").replaceAll("</line>", "").trim();
-            }
-            line = scan.nextLine();
-        }
-        role.setFlavor(flavorText);
-        return role;
-    }
-
 }

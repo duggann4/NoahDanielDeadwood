@@ -1,8 +1,10 @@
 package src;
 
+import java.util.ArrayList;
+
 public abstract class Area {
     private String name;
-    private Area[] neighbors;
+    private ArrayList<Area> neighbors;
 
     public String toString(){
         return null;
