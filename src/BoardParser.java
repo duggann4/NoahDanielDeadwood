@@ -1,5 +1,9 @@
 package src;
 
+// NOTE: If your syntax highlighting is being weird,
+//  try removing and replacing one of the ">"
+//  characters in readBoard()
+
 /**
  * Title: BoardParser
  * Author: Noah Duggan Erickson
@@ -43,17 +47,7 @@ package src;
  *  Standard java.lang.Object inheritance
  */
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Arrays;
-
-/*
- * Noah's TODO list:
- *  1. Create parsers for <trailers> and <office>
- *  1a. Create corresponding classes, implements Area
- */
 
 public class BoardParser extends Parser{
 
@@ -67,6 +61,10 @@ public class BoardParser extends Parser{
             String line = scan.nextLine().strip();
             if(line.contains("<set ")){
                 out.add(readSet(line));
+            } else if(line.contains("<trailer")){
+                readTrailer(line);
+            } else if(line.contains("<office>")){
+                readOffice(line);
             }
         }
         return out;
@@ -116,5 +114,26 @@ public class BoardParser extends Parser{
             line = scan.nextLine();
         }
     }
+
+    private static void readTrailer(String line){
+        while(!line.contains("</trailer")){
+            if(line.contains("<neighbor n")){
+                Trailer.getInstance().addNeighbor(line.split("\"")[1]);
+            }
+            line = scan.nextLine();
+        }
+    }
+
+    private static void readOffice(String line){
+        while(!line.contains("</office")){
+            if(line.contains("<neighbor n")){
+                Office.getInstance().addNeighbor(line.split("\"")[1]);
+            } else if(line.contains("<upgrade l")){
+                Office.getInstance().addUpgrade(line);
+            }
+            line = scan.nextLine();
+        }
+    }
+
     
 }
