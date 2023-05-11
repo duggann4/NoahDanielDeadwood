@@ -126,9 +126,13 @@ public class Set implements Area {
     public String toString(){
         return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + shotsRemaining + " shots";
     }
+    //TODO COMMENT
+    public void setScene(Scene scene){
+        currentScene = scene;
+    }
 
-    public void setScene(){
-
+    public Scene getScene() {
+        return currentScene;
     }
 
     public void shoot(){

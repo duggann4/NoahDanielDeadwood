@@ -47,7 +47,13 @@ public class Deadwood {
             numberOfDays = 4;
         }
 
-        // TODO: Load scenes and setup board
+        board = Board.getInstance();
+        board.placeNewScenes();
+        board.printBoard();
+
+        for(Player player : players) {
+            player.setArea(board.getArea("Trailer"));
+        }
     }
 
     private static void welcomeMessage() {

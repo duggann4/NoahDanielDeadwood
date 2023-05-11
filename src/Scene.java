@@ -56,6 +56,7 @@ package src;
 import java.util.ArrayList;
 // Note to self: This class represents the cards
 public class Scene{
+    private String title;
     private String flavor;
     private int sceneNo;
     private int budget;
