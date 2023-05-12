@@ -114,6 +114,14 @@ public class Office implements Area{
         String[] attrs = line.split("\"");
         instance.upgrades.add(new Upgrade(Integer.parseInt(attrs[1]), attrs[3], Integer.parseInt(attrs[5])));
     }
+    public boolean validateUpgrade(int rank, int amount) {
+        if (amount >= upgrades.get(rank).getAmt()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static Office getInstance(){
         return instance;
     }

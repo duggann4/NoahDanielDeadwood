@@ -36,5 +36,17 @@ public class Upgrade { // implements Comparable<Player>?
         this.curType = curType;
         this.amt = amt;
     }
-    // Daniel - create getters as needed!
+
+    public String getCurType() {
+        return curType;
+    }
+
+    public int getAmt() {
+        return amt;
+    }
+
+    public String toString() {
+        return ("Rank - " + level + ", " + amt + " " + curType + "s");
+    }
+    // TODO: COMMENTS :(
 }

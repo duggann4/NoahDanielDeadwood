@@ -24,37 +24,54 @@ public class Player {
         System.out.println("It is now " + name + "'s turn. Rank: " + rank + ", Credits: " + credits + ", Dollars: " + dollars);
         System.out.println("Your current location is the " + currentArea.getName() + ".");
 
-        if (currentArea.getName() == "office") {
-            System.out.println("Would you like to upgrade your rank?\n\t0: Yes\n\t1: No");
-            int input = scanner.nextInt();
-            if (input == 0) {
-                upgrade();
-            }
-        }
-
         if (currentRole != null) {
-            //TODO: Display more information about current role
-            System.out.println("You are currently working for the scene " + ((Set)currentArea).getScene().toString() + ".");
-            System.out.println("The budget for this scene is " + ((Set)currentArea).getScene().getBudget());
-            System.out.println("Your role is " + currentRole.getName() + " and you have " + rehearsalChips + " rehearsal chips.");
-            System.out.println("What would you like to do?\n\t0: Rehearse\n\t1: Act");
-            int input = scanner.nextInt();
-            if (input == 0) {
-                rehearse();
-            } else {
-                act();
-            }
+            work();
         } else {
+            /* Offer role at start of turn?
             if (currentArea instanceof Set) {
                 offerRole(((Set)currentArea).getAvailableRoles());
-            }
+            } */
             move();
         }
         System.out.println("-Ending Turn-\n");
     }
 
+    //TODO: could access Board instead of Office directly?
     private void upgrade() {
-        // TODO: Display options, have player select valid rank, and update rank
+        System.out.println("Would you like to upgrade your rank?\n\t0: Yes\n\t1: No");
+        int input = scanner.nextInt();
+        if (input == 0) {
+            ArrayList<Upgrade> upgrades = Office.getInstance().getUpgrades();
+            System.out.println("\nSelect a valid upgrade:");
+            System.out.println("\t0: Cancel upgrade");
+            for (Upgrade upgrade : upgrades) {
+                if (upgrades.indexOf(upgrade) + 1 == 6) {
+                    System.out.println();
+                }
+                System.out.println("\t" + (upgrades.indexOf(upgrade) + 1) + ": " + upgrade.toString());
+            }
+            input = scanner.nextInt();
+            if (input == 0) {
+                System.out.println("\nYour rank remains unchanged");
+            } else { //TODO: bounds checking
+                String type = upgrades.get(input).getCurType();
+                if (input + 1 <= rank) {
+                    System.out.println("\nThat rank is equal or below yours...");
+                } else if (input < 0 || input > 6) {
+                    System.out.println("\nInvalid upgrade, input out of range.");
+                } else if (!Office.getInstance().validateUpgrade(input, credits)) {
+                    System.out.println("\nYou cannot afford that upgrade...");
+                } else {
+                    System.out.println("\nYou have upgraded to Rank " + input + "!");
+                    rank = input;
+                    if (type.equals("Dollar")) {
+                        dollars -= upgrades.get(input).getAmt();
+                    } else {
+                        credits -= upgrades.get(input).getAmt();
+                    }
+                }    
+            }
+        }
     }
 
     private void move() {
@@ -73,11 +90,13 @@ public class Player {
             } else { //TODO: bounds checking
                 currentArea = Board.getInstance().getArea(neighbors.get(input - 1));
                 System.out.println("\nYou have moved to the " + currentArea.getName() + ".");
-                if (currentArea instanceof Set) {
-                    offerRole(((Set)currentArea).getAvailableRoles());
-                }
             }
-        } 
+        }
+        if (currentArea instanceof Set) {
+            offerRole(((Set)currentArea).getAvailableRoles());
+        } else if (currentArea.getName() == "office") {
+            upgrade();
+        }
     }
 
     public void setArea(Area area) {
@@ -106,6 +125,20 @@ public class Player {
                 currentRole.setPlayer(this);
                 System.out.println("\nYou have taken the role of " + currentRole.getName() + ".");
             }
+        }
+    }
+
+    private void work() {
+        //TODO: Display more information about current role
+        System.out.println("You are currently working for the scene " + ((Set)currentArea).getScene().toString() + ".");
+        System.out.println("The budget for this scene is " + ((Set)currentArea).getScene().getBudget());
+        System.out.println("Your role is " + currentRole.getName() + " and you have " + rehearsalChips + " rehearsal chips.");
+        System.out.println("What would you like to do?\n\t0: Rehearse\n\t1: Act");
+        int input = scanner.nextInt();
+        if (input == 0) {
+            rehearse();
+        } else {
+            act();
         }
     }
 

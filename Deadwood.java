@@ -77,7 +77,7 @@ public class Deadwood {
         for (int i = 0; i < numPlayers; i++) {
             System.out.println("Enter name for player " + (i+1) + ":");
             String name = scanner.nextLine();
-            players.add(new Player(name, credits, rank));
+            players.add(new Player(name, rank, credits));
         }
     }
 
