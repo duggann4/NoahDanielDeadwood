@@ -75,7 +75,7 @@ public class CardParser extends Parser{
             if(line.contains("<scene ")){
                 readFlavor(line, s);
             } else if(line.contains("<part ")){
-                s.addRole(readPart(line));
+                s.addRole(readPart(line, true));
             }
         }
         return s;

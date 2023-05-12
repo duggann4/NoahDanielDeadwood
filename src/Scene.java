@@ -81,6 +81,15 @@ public class Scene{
     public void addRole(Role role){
         onRoles.add(role);
     }
+
+    public ArrayList<Role> getRoles() {
+        return onRoles;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
     public String toString(){
         return title + " scene " + sceneNo;
     }

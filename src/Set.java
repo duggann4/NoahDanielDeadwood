@@ -76,15 +76,19 @@ package src;
  *      Specified by:
  *          toString in interface Area
  * 
- *  public void setScene()
- *  public void shoot()
+ *  public void setScene()         TODO: Finish comments
+ *  public Scene getScene()
+ *  public boolean shoot()
  *  public void wrap()
+ *  public ArrayList<Role> getAvailableRoles()
+ *  public int getShotsRemaining()
  * 
  * INHERITED METHODS:
  *  Standard java.lang.Object inheritance
  */
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Set implements Area {
     private String name;
@@ -92,6 +96,7 @@ public class Set implements Area {
     private Scene currentScene;
     private ArrayList<Role> offRoles; // off-card
     private int shotsRemaining;
+    private Random random = new Random(); // for dice
 
     public Set(){
         // called exclusively by BoardParser
@@ -126,7 +131,7 @@ public class Set implements Area {
     public String toString(){
         return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + shotsRemaining + " shots";
     }
-    //TODO COMMENT
+    
     public void setScene(Scene scene){
         currentScene = scene;
     }
@@ -135,18 +140,52 @@ public class Set implements Area {
         return currentScene;
     }
 
-    public void shoot(){
+    public ArrayList<Role> getAvailableRoles() {
+        ArrayList<Role> availableRoles = new ArrayList<Role>();
+        for (Role role : offRoles) {
+            if (role.checkOpen()) {
+                availableRoles.add(role);
+            }
+        }
+        for (Role role : currentScene.getRoles()) {
+            if (role.checkOpen()) {
+                availableRoles.add(role);
+            }
+        }
+        return availableRoles;
+    }
+
+    public int getShotsRemaining() {
+        return shotsRemaining;
+    }
+
+    public boolean shoot(int rehearsalChips) {
+        int roll = rollDice(1, 6) + rehearsalChips;
+        if (roll >= currentScene.getBudget()) {
+            System.out.println("Your acting was a success!");
+            shotsRemaining--;
+            return true;
+        }
+        else {
+            System.out.println("Your attempt to act failed...");
+            return false;
+        }
     }
 
     public void wrap(){
-
+        // TODO: remove scene
+        payout();
     }
 
     private void payout(){
 
     }
 
-    private int rollDice(int n, int s){
-        return 0;
+    private int rollDice(int rolls, int sides){
+        int total = 0;
+        for (int i = 0; i < rolls; i++) {
+            total += random.nextInt(sides) + 1;
+        }
+        return total;
     }
 }

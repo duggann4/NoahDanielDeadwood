@@ -96,7 +96,7 @@ public class Office implements Area{
         upgrades = new ArrayList<Upgrade>();
     }
     public String getName(){
-        return "Office";
+        return "office";
     }
     public ArrayList<String> getNeighbors(){
         return instance.neighbors;
@@ -105,7 +105,7 @@ public class Office implements Area{
         return instance.upgrades;
     }
     public boolean equals(Area a){
-        return a.getName().equals("Office");
+        return a.getName().equals("office");
     }
     public void addNeighbor(String name){
         instance.neighbors.add(name);

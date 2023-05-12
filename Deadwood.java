@@ -28,9 +28,11 @@ public class Deadwood {
         // Turn Loop
         for(int day = 1; day <= numberOfDays; day++) {
             System.out.println("\n-- Start Day " + day + " --\n");
-            // Player turns
-            for (Player player : players) {
-                player.playTurn();
+            while (board.getActiveSceneCount() > 1) {
+                // Player turns
+                for (Player player : players) {
+                    player.playTurn();
+                }
             }
             endDay();
         }
@@ -49,10 +51,10 @@ public class Deadwood {
 
         board = Board.getInstance();
         board.placeNewScenes();
-        board.printBoard();
+        //board.printBoard();
 
         for(Player player : players) {
-            player.setArea(board.getArea("Trailer"));
+            player.setArea(board.getArea("trailer"));
         }
     }
 

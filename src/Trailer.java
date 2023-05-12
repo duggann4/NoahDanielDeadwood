@@ -80,16 +80,16 @@ public class Trailer implements Area{
         neighbors = new ArrayList<String>();
     }
     public String getName(){
-        return "Trailer";
+        return "trailer";
     }
     public ArrayList<String> getNeighbors(){
         return instance.neighbors;
     }
     public boolean equals(Area a){
-        return a.getName().equals("Trailer");
+        return a.getName().equals("trailer");
     }
     public String toString(){
-        return "Trailer";
+        return "trailer";
     }
     public void addNeighbor(String name){
         instance.neighbors.add(name);

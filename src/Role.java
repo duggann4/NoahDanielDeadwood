@@ -58,17 +58,21 @@ package src;
  */
 
 public class Role {
+    private Player player;
     private String name;
     private String flavorLine;
     private int rankRequired;
     private boolean roleOpen;
+    private boolean onCard;
 
-    public Role(){
+    public Role() {
         // Called exclusively from parsers
+        player = null;
         name = "";
         flavorLine = "";
         rankRequired = 0;
         roleOpen = true;
+        onCard = false;
     }
 
     public void setBasic(String name, int rank){
@@ -80,6 +84,14 @@ public class Role {
         this.flavorLine = flavor;
     }
 
+    public void setOnCard(boolean onCard) {
+        this.onCard = onCard;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public boolean takeRole(int pRank){
         if(roleOpen && pRank >= rankRequired){
             roleOpen = false;
@@ -87,6 +99,14 @@ public class Role {
         } else {
             return false;
         }
+    }
+
+    public boolean checkOpen() {
+        return roleOpen;
+    }
+
+    public boolean checkOnCard() {
+        return onCard;
     }
 
     public String getName() {

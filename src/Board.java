@@ -40,7 +40,7 @@ public class Board {
 
     public Area getArea(String areaName) {
         for(Area area : areas) {
-            if(area.getName() == areaName) {
+            if(area.getName().equals(areaName)) {
                 return area;
             }
         }
@@ -56,6 +56,10 @@ public class Board {
                 System.out.println("\tActice Scene: " + ((Set)area).getScene().toString());
             }
         }
+    }
+
+    public int getActiveSceneCount() {
+        return activeScenes.size();
     }
 
     public static Board getInstance(){

@@ -62,7 +62,7 @@ public abstract class Parser {
         }
     }
 
-    static Role readPart(String line){
+    static Role readPart(String line, boolean onCard){ //TODO: update comment
         Role role = new Role();
         String flavorText = "";
         String[] attrs = line.split("\"");
@@ -75,6 +75,7 @@ public abstract class Parser {
             line = scan.nextLine();
         }
         role.setFlavor(flavorText);
+        role.setOnCard(onCard);
         return role;
     }
 }
