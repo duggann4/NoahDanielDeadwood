@@ -51,25 +51,83 @@ public class Player {
                 System.out.println("\t" + (upgrades.indexOf(upgrade) + 1) + ": " + upgrade.toString());
             }
             input = scanner.nextInt();
-            if (input == 0) {
-                System.out.println("\nYour rank remains unchanged");
-            } else { //TODO: bounds checking
-                String type = upgrades.get(input).getCurType();
-                if (input + 1 <= rank) {
-                    System.out.println("\nThat rank is equal or below yours...");
-                } else if (input < 0 || input > 6) {
-                    System.out.println("\nInvalid upgrade, input out of range.");
-                } else if (!Office.getInstance().validateUpgrade(input, credits)) {
-                    System.out.println("\nYou cannot afford that upgrade...");
+
+            int rank = 0;
+            int cost = 0;
+            String type = null;
+            switch (input) { //TODO: get rid of this ugly switch statement
+                case 0:
+                    System.out.println("\nYour rank remains unchanged");
+                    return;
+                case 1:
+                    rank = 2;
+                    cost = 4;
+                    type = "dollar";
+                    break;
+                case 2:
+                    rank = 3;
+                    cost = 10;
+                    type = "dollar";
+                    break;
+                case 3:
+                    rank = 4;
+                    cost = 18;
+                    type = "dollar";
+                    break;
+                case 4:
+                    rank = 5;
+                    cost = 28;
+                    type = "dollar";
+                    break;
+                case 5:
+                    rank = 6;
+                    cost = 40;
+                    type = "dollar";
+                    break;
+                case 6:
+                    rank = 2;
+                    cost = 5;
+                    type = "credit";
+                    break;
+                case 7:
+                    rank = 3;
+                    cost = 10;
+                    type = "credit";
+                    break;
+                case 8:
+                    rank = 4;
+                    cost = 15;
+                    type = "credit";
+                    break;
+                case 9:
+                    rank = 5;
+                    cost = 20;
+                    type = "credit";
+                    break;
+                case 10:
+                    rank = 6;
+                    cost = 25;
+                    type = "credit";
+                    break;
+                default:
+                    System.out.println("\nInvalid upgrade, input out of range 1-10.");
+                    break;
+            }
+
+            if (rank <= this.rank) {
+                System.out.println("\nThat rank is equal or below yours...");
+            } else if (type.equals("dollar") && !Office.getInstance().validateUpgrade(rank, dollars, type)) {
+                System.out.println("\nYou cannot afford that upgrade...");
+            } else if (type.equals("credit") && !Office.getInstance().validateUpgrade(rank, credits, type)) {
+                System.out.println("\nYou cannot afford that upgrade...");
+            } else {
+                System.out.println("\nYou have upgraded to Rank " + rank + "!");
+                this.rank = rank;
+                if (type.equals("dollar")) {
+                    dollars -= cost;
                 } else {
-                    System.out.println("\nYou have upgraded to Rank " + input + "!");
-                    rank = input;
-                    if (type.equals("Dollar")) {
-                        dollars -= upgrades.get(input).getAmt();
-                    } else {
-                        credits -= upgrades.get(input).getAmt();
-                    }
-                }    
+                    credits -= cost;
+                }  
             }
         }
     }
@@ -93,7 +151,11 @@ public class Player {
             }
         }
         if (currentArea instanceof Set) {
-            offerRole(((Set)currentArea).getAvailableRoles());
+            if (((Set)currentArea).getScene() != null) {
+                offerRole(((Set)currentArea).getAvailableRoles());
+            } else {
+                System.out.println("Today's scene in this area has already completed");
+            }
         } else if (currentArea.getName() == "office") {
             upgrade();
         }
@@ -107,23 +169,31 @@ public class Player {
         
     }
 
-    //TODO: Apply rank check for roles
     private void offerRole(ArrayList<Role> roles) {
         if (roles.size() == 0) {
             System.out.println("No available roles at current location");
         } else {
             System.out.println("Select a role to take:"); 
             System.out.println("\t0: Don't take role");
-            for (Role role : roles) {
-                System.out.println("\t" + (roles.indexOf(role) + 1) + ": " + role.toString()); //TODO: specify which roles are on card
+            for (Role role : roles) { //TODO: dont offer taken roles
+                System.out.print("\t" + (roles.indexOf(role) + 1) + ": " + role.toString()); //TODO: specify which roles are on card
+                if (role.checkOnCard()) {
+                    System.out.println(" (On Card)");
+                } else {
+                    System.out.println(" (Off Card)");
+                }
             }
             int input = scanner.nextInt();
             if (input == 0) {
                 System.out.println("\nYou chose not to take a role.");
             } else { //TODO: bounds checking
-                currentRole = roles.get(input - 1);
-                currentRole.setPlayer(this);
-                System.out.println("\nYou have taken the role of " + currentRole.getName() + ".");
+                Role role = roles.get(input - 1);
+                if (role.takeRole(this)) {
+                    currentRole = role;
+                    System.out.println("\nYou have taken the role of " + currentRole.getName() + ".");
+                } else {
+                    System.out.println("\nInsufficient rank to take that role...");
+                }
             }
         }
     }
@@ -131,7 +201,8 @@ public class Player {
     private void work() {
         //TODO: Display more information about current role
         System.out.println("You are currently working for the scene " + ((Set)currentArea).getScene().toString() + ".");
-        System.out.println("The budget for this scene is " + ((Set)currentArea).getScene().getBudget());
+        System.out.print("The budget for this scene is " + ((Set)currentArea).getScene().getBudget());
+        System.out.println(", and there are " + ((Set)currentArea).getShotsRemaining() + " shots remaining.");
         System.out.println("Your role is " + currentRole.getName() + " and you have " + rehearsalChips + " rehearsal chips.");
         System.out.println("What would you like to do?\n\t0: Rehearse\n\t1: Act");
         int input = scanner.nextInt();
@@ -149,6 +220,7 @@ public class Player {
 
     private void act() {
         if (((Set)currentArea).shoot(rehearsalChips)) {
+            System.out.println("Your acting was a success!");
             if (currentRole.checkOnCard()) {
                 System.out.println("You gained 2 credits for succeeding at on card role!");
                 credits += 2;
@@ -157,11 +229,11 @@ public class Player {
                 credits++;
                 dollars++;
             }
-
             if(((Set)currentArea).getShotsRemaining() == 0) {
                 ((Set)currentArea).wrap();
             }
         } else {
+            System.out.println("Your attempt to act failed...");
             if (!currentRole.checkOnCard()) {
                 System.out.println("You gained 1 dollar for failing at off card role...");
                 dollars++;
@@ -179,5 +251,17 @@ public class Player {
 
     public void addCredits(int credits) {
         this.credits += credits;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public int getScore() {
+        return dollars + credits + rank*5;
     }
 }

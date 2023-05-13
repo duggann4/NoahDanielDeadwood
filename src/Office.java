@@ -87,7 +87,8 @@ package src;
 
 import java.util.ArrayList;
 
-public class Office implements Area{
+public class Office implements Area {
+
     private ArrayList<String> neighbors;
     private ArrayList<Upgrade> upgrades;
     private static Office instance = new Office();
@@ -114,12 +115,18 @@ public class Office implements Area{
         String[] attrs = line.split("\"");
         instance.upgrades.add(new Upgrade(Integer.parseInt(attrs[1]), attrs[3], Integer.parseInt(attrs[5])));
     }
-    public boolean validateUpgrade(int rank, int amount) {
-        if (amount >= upgrades.get(rank).getAmt()) {
-            return true;
-        } else {
-            return false;
+    public boolean validateUpgrade(int rank, int amount, String type) {
+        for (Upgrade upgrade : upgrades) {
+            if (upgrade.getLevel() == rank && upgrade.getCurType().equals(type)) {
+                if (upgrade.getAmt() <= amount) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
         }
+        return false;
     }
 
     public static Office getInstance(){

@@ -88,17 +88,18 @@ public class Role {
         this.onCard = onCard;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public boolean takeRole(int pRank){
-        if(roleOpen && pRank >= rankRequired){
+    public boolean takeRole(Player player){
+        if(roleOpen && player.getRank() >= rankRequired){
+            this.player = player;
             roleOpen = false;
             return true;
         } else {
             return false;
         }
+    }
+
+    public void freeRole() {
+        roleOpen = true;
     }
 
     public boolean checkOpen() {
@@ -111,6 +112,14 @@ public class Role {
 
     public String getName() {
         return name;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public int getRank() {
+        return rankRequired;
     }
 
     public String toString(){

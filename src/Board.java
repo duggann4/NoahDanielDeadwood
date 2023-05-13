@@ -24,6 +24,11 @@ public class Board {
 
     public void placeNewScenes() {
         activeScenes.clear();
+        for(Area area : areas) {
+            if (area instanceof Set) {
+                ((Set)area).resetSet();
+            }
+        }
         for (int i = 0; i < 10; i++) {
             activeScenes.add(cardDeck.get(0));
             cardDeck.remove(0);
@@ -46,7 +51,11 @@ public class Board {
         }
         // TODO: throw exception or something
         return null;
-    } 
+    }
+
+    public void removeScene(Scene scene) {
+        activeScenes.remove(scene);
+    }
 
     // Print board for debugging
     public void printBoard() {

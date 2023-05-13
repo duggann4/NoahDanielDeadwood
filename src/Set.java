@@ -88,6 +88,7 @@ package src;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Set implements Area {
@@ -95,10 +96,11 @@ public class Set implements Area {
     private ArrayList<String> neighbors;
     private Scene currentScene;
     private ArrayList<Role> offRoles; // off-card
+    private int shots;
     private int shotsRemaining;
     private Random random = new Random(); // for dice
 
-    public Set(){
+    public Set() {
         // called exclusively by BoardParser
         name = "";
         neighbors = new ArrayList<String>();
@@ -109,30 +111,38 @@ public class Set implements Area {
     public void setName(String name){
         this.name = name;
     }
-    public void addNeighbor(String name){
+    public void addNeighbor(String name) {
         neighbors.add(name);
     }
-    public void setShots(int shots){
-        shotsRemaining = shots;
+    public void setShots(int shots) {
+        this.shots = shots;
     }
-    public void addRole(Role r){
+
+    public void resetSet() {
+        shotsRemaining = shots;
+        for(Role role : offRoles) {
+            role.freeRole();
+        }
+    }
+
+    public void addRole(Role r) {
         offRoles.add(r);
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
-    public ArrayList<String> getNeighbors(){
+    public ArrayList<String> getNeighbors() {
         return neighbors;
     }
-    public boolean equals(Area a){
+    public boolean equals(Area a) {
         return (this.name).equals(a.getName());
     }
-    public String toString(){
+    public String toString() {
         return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + shotsRemaining + " shots";
     }
     
-    public void setScene(Scene scene){
+    public void setScene(Scene scene) {
         currentScene = scene;
     }
 
@@ -162,26 +172,65 @@ public class Set implements Area {
     public boolean shoot(int rehearsalChips) {
         int roll = rollDice(1, 6) + rehearsalChips;
         if (roll >= currentScene.getBudget()) {
-            System.out.println("Your acting was a success!");
             shotsRemaining--;
             return true;
         }
         else {
-            System.out.println("Your attempt to act failed...");
             return false;
         }
     }
 
-    public void wrap(){
-        // TODO: remove scene
-        payout();
+    public void wrap() {
+        System.out.println("Scene completed!");
+        ArrayList<Role> rolesOnCard = new ArrayList<Role>();
+        ArrayList<Role> rolesOffCard = new ArrayList<Role>();
+        for (Role role : currentScene.getRoles()) {
+            if (!role.checkOpen()) {
+                rolesOnCard.add(role);
+                role.getPlayer().removeRole();
+            }
+        }
+        for (Role role : offRoles) {
+            if (!role.checkOpen()) {
+                rolesOffCard.add(role);
+                role.getPlayer().removeRole();
+            }
+        }
+        payout(rolesOnCard, rolesOffCard);
+        Board.getInstance().removeScene(currentScene);
+        currentScene = null;
     }
 
-    private void payout(){
+    //TODO: make output prettier
+    private void payout(ArrayList<Role> rolesOnCard, ArrayList<Role> rolesOffCard) {
+        if (rolesOnCard.size() > 0) {
+            System.out.println("Payout!");
+            ArrayList<Integer> diceRolls = new ArrayList<Integer>();
+            for (int i = 0; i < currentScene.getBudget(); i++) {
+                diceRolls.add(rollDice(1, 6));
+            }
+            Collections.sort(diceRolls, Collections.reverseOrder());
 
+            int playerNum = 0;
+            for (int roll : diceRolls) {
+                if (playerNum == rolesOnCard.size()) {
+                    playerNum = 0;
+                }
+                Player player = rolesOnCard.get(playerNum).getPlayer();
+                player.addDollars(roll);
+                playerNum++;
+                System.out.println("\t" + player.getName() + " Gained " + roll + " Dollars!");
+            }
+            for (Role role : rolesOffCard) {
+                role.getPlayer().addDollars(role.getRank());
+                System.out.println("\t" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
+            }
+        } else {
+            System.out.println("No players acting on any on card roles, so no bonus pay...");
+        }
     }
 
-    private int rollDice(int rolls, int sides){
+    private int rollDice(int rolls, int sides) {
         int total = 0;
         for (int i = 0; i < rolls; i++) {
             total += random.nextInt(sides) + 1;

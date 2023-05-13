@@ -16,26 +16,25 @@ public class Deadwood {
             System.out.println("Must enter number of players as a command line argument");
             return;
         }
-        
         int numPlayers = Integer.parseInt(args[0]);
         if (numPlayers < 2 || numPlayers > 8) {
             System.out.println("Number of players must be between 2 and 8.");
             return;
         }
-
         setup(numPlayers);
-
-        // Turn Loop
         for(int day = 1; day <= numberOfDays; day++) {
             System.out.println("\n-- Start Day " + day + " --\n");
             while (board.getActiveSceneCount() > 1) {
-                // Player turns
                 for (Player player : players) {
                     player.playTurn();
+                    if (board.getActiveSceneCount() <= 1) { //TODO: better loop logic
+                        break;
+                    }
                 }
             }
             endDay();
         }
+        score();
     }
 
     private static void setup(int numPlayers) {
@@ -83,14 +82,24 @@ public class Deadwood {
 
     private static void endDay() {
         for (Player player : players) {
-            // TODO: Set player positions to Trailer
+            player.setArea(board.getArea("trailer"));
+            player.removeRole();
         }
-
-        // TODO: Remove remaining scene, reset shot counters, and place new scenes
+        board.placeNewScenes();
     }
 
     private static void score() {
-        // TODO: Calculate scores and display results
+        int highScore = 0;
+        Player winner = null;
+        for (Player player : players) {
+            int score = player.getScore();
+            System.out.println(player.getName() + " scored " + score + " points!");
+            if (score > highScore) {
+                highScore = score;
+                winner = player;
+            }
+        }
+        System.out.println("\n\n Congradulations " + winner.getName() + "! You won!");
     }
 
     private static void close() {

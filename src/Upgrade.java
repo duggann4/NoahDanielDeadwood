@@ -41,6 +41,10 @@ public class Upgrade { // implements Comparable<Player>?
         return curType;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
     public int getAmt() {
         return amt;
     }
