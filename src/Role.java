@@ -123,6 +123,6 @@ public class Role {
     }
 
     public String toString(){
-        return name + ", \"" + flavorLine + "\" requires rank " + rankRequired;
+        return name + ", \"" + flavorLine + "\" | Rank: " + rankRequired;
     }
 }

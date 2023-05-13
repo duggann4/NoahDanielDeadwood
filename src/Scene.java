@@ -91,12 +91,12 @@ public class Scene{
     }
 
     public String toString(){
-        return title + " scene " + sceneNo;
+        return title + ", Budget: " + budget;
     }
 
     // Because it's *flavorful*...? No? Tough crowd I guess...
     //
     public String tastyString(){
-        return title + "(" + sceneNo + "), Budget:" + budget + flavor;
+        return title + " (" + sceneNo + "), Budget: " + budget + flavor;
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Board {
+
     private ArrayList<Area> areas = new ArrayList<Area>();
     private ArrayList<Scene> activeScenes = new ArrayList<Scene>();
     private ArrayList<Scene> cardDeck;
@@ -57,6 +58,14 @@ public class Board {
         activeScenes.remove(scene);
     }
 
+    public int getActiveSceneCount() {
+        return activeScenes.size();
+    }
+
+    public static Board getInstance(){
+        return instance;
+    }
+
     // Print board for debugging
     public void printBoard() {
         for (Area area : areas) {
@@ -65,13 +74,5 @@ public class Board {
                 System.out.println("\tActice Scene: " + ((Set)area).getScene().toString());
             }
         }
-    }
-
-    public int getActiveSceneCount() {
-        return activeScenes.size();
-    }
-
-    public static Board getInstance(){
-        return instance;
     }
 }

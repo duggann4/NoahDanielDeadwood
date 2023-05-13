@@ -181,7 +181,7 @@ public class Set implements Area {
     }
 
     public void wrap() {
-        System.out.println("Scene completed!");
+        System.out.println("\nScene completed!");
         ArrayList<Role> rolesOnCard = new ArrayList<Role>();
         ArrayList<Role> rolesOffCard = new ArrayList<Role>();
         for (Role role : currentScene.getRoles()) {
@@ -204,7 +204,7 @@ public class Set implements Area {
     //TODO: make output prettier
     private void payout(ArrayList<Role> rolesOnCard, ArrayList<Role> rolesOffCard) {
         if (rolesOnCard.size() > 0) {
-            System.out.println("Payout!");
+            System.out.println("\n\tPayout:\n\t-------");
             ArrayList<Integer> diceRolls = new ArrayList<Integer>();
             for (int i = 0; i < currentScene.getBudget(); i++) {
                 diceRolls.add(rollDice(1, 6));

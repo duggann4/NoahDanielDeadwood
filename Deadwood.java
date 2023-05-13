@@ -1,32 +1,32 @@
 import src.*;
 
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deadwood {
 
-    private static Board board;
     private static int numberOfDays;
+    private static Board board = Board.getInstance();
+    private static ViewHandler view = ViewHandler.getInstance();
     private static ArrayList<Player> players = new ArrayList<>();
-    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String args[]) {
         if (args.length == 0) {
-            System.out.println("Must enter number of players as a command line argument");
+            view.print("Must enter number of players as a command line argument");
             return;
         }
         int numPlayers = Integer.parseInt(args[0]);
         if (numPlayers < 2 || numPlayers > 8) {
-            System.out.println("Number of players must be between 2 and 8.");
+            view.print("Number of players must be between 2 and 8.");
             return;
         }
         setup(numPlayers);
         for(int day = 1; day <= numberOfDays; day++) {
-            System.out.println("\n-- Start Day " + day + " --\n");
+            view.print("\n============ Start Day " + day + " ============\n");
             while (board.getActiveSceneCount() > 1) {
                 for (Player player : players) {
                     player.playTurn();
+                    view.print("\n------------ Ending Turn ------------\n");
                     if (board.getActiveSceneCount() <= 1) { //TODO: better loop logic
                         break;
                     }
@@ -34,6 +34,7 @@ public class Deadwood {
             }
             endDay();
         }
+        view.print("\n============ Ending Final Day ============n");
         score();
     }
 
@@ -47,8 +48,6 @@ public class Deadwood {
         } else {
             numberOfDays = 4;
         }
-
-        board = Board.getInstance();
         board.placeNewScenes();
         //board.printBoard();
 
@@ -59,7 +58,7 @@ public class Deadwood {
 
     private static void welcomeMessage() {
         // TODO: Add proper welcome message
-        System.out.println("Hello! Welcome to Deadwood and stuff!\n");
+        view.print("Hello! Welcome to Deadwood and stuff!");
     }
 
     private static void createPlayers(int numPlayers) {
@@ -74,8 +73,8 @@ public class Deadwood {
         }
 
         for (int i = 0; i < numPlayers; i++) {
-            System.out.println("Enter name for player " + (i+1) + ":");
-            String name = scanner.nextLine();
+            view.print("\nEnter name for player " + (i+1) + ":");
+            String name = view.getString();
             players.add(new Player(name, rank, credits));
         }
     }
@@ -93,13 +92,14 @@ public class Deadwood {
         Player winner = null;
         for (Player player : players) {
             int score = player.getScore();
-            System.out.println(player.getName() + " scored " + score + " points!");
+            view.print("\n\tScore Board:\n\t------------");
+            view.print("\t" + player.getName() + " scored " + score + " points!");
             if (score > highScore) {
                 highScore = score;
                 winner = player;
             }
         }
-        System.out.println("\n\n Congradulations " + winner.getName() + "! You won!");
+        view.print("\nCongradulations " + winner.getName() + ", you won!\n");
     }
 
     private static void close() {
