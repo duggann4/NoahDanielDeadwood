@@ -31,11 +31,12 @@ package src;
  *      Error codes:
  *          51: Could not open file
  * 
- *  protected static Role readPart(String line)
+ *  protected static Role readPart(String line boolean onCard)
  *      Parses information pertaining to roles/parts into a new Role object.
  *      Author: Noah Duggan Erickson
  *      Parameters:
  *          line - the current line of scan
+ *          onCard - true if role is on card
  *      Returns:
  *          Role object containing parsed information
  * 
@@ -62,7 +63,7 @@ public abstract class Parser {
         }
     }
 
-    static Role readPart(String line, boolean onCard){ //TODO: update comment
+    static Role readPart(String line, boolean onCard){
         Role role = new Role();
         String flavorText = "";
         String[] attrs = line.split("\"");

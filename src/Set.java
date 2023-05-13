@@ -2,7 +2,7 @@ package src;
 
 /**
  * Title: Set
- * Author: Noah Duggan Erickson
+ * Authors: Noah Duggan Erickson, Daniel Wertz
  * CSCI 345
  * Spring 2023
  * 
@@ -14,10 +14,22 @@ package src;
  * 
  * METHODS:
  *  public void setName(String name)
- *      Overrides the existing values for name
+ *      Overrides the existing value for name
  *      Author: Noah Duggan Erickson
  *      Parameters:
  *          name - the new name of the set
+ * 
+ *  public void setShots(int shots)
+ *      Overrides the existing value for shotsRemaining
+ *      Author: Noah Duggan Erickson
+ *      Parameters:
+ *          shots - the new value of shotsRemaining
+ * 
+ *  public void setScene(Scene scene)
+ *      Overrides the existing value for currentScene
+ *      Author: Daniel Wertz
+ *      Parameters:
+ *          scene - the new currentScene
  * 
  *  public void addNeighbor(String name)
  *      Adds a the name of another set object
@@ -26,17 +38,39 @@ package src;
  *      Parameters:
  *          name - the new Set.name to add as a neighbor
  * 
- *  public void setShots(int shots)
- *      Overrides the existing values for shotsRemaining
- *      Author: Noah Duggan Erickson
- *      Parameters:
- *          shots - the new value of shotsRemaining
- * 
  *  public void addRole(Role r)
  *      Adds a Role object to the internal collection of off-card roles
  *      Author: Noah Duggan Erickson
  *      Parameters:
- *          role - the new role to add to the set
+ *          role - the new role to add to the set\
+ * 
+ *  public void resetSet()
+ *      Resets shotsRemaining and frees offRoles
+ *      Author: Daniel Wertz
+ * 
+ *  public boolean shoot(int rehearsalChips)
+ *      Rolls dice to simulate player acting and returns result
+ *      Author: Daniel Wertz
+ *      Parameters:
+ *          rehearsalChips - Players rehearsalChips to be added to roll
+ *      Returns:
+ *          true if acting is successful
+ *      
+ *  public void wrap()
+ *      Wraps scene and calls private method payout() to handle bonus pay
+ *      Author: Daniel Wertz
+ * 
+ *  public ArrayList<Role> getAvailableRoles()
+ *      Generates and returns an ArrayList of all open roles at this Set
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          ArrayList of open roles
+ * 
+ *  public int getShotsRemaining()
+ *      Returns shots remaining
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.shotsRemaining
  * 
  *  public String getName()
  *      Returns the name of the set
@@ -53,6 +87,12 @@ package src;
  *          ArrayList<String> with the names of all neighboring areas
  *      Specified by:
  *          getNeighbors in interface Area
+ * 
+ *  public Scene getScene()
+ *      Returns the set's current scene
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.currentScene
  * 
  *  public boolean equals(Area a)
  *      Returns whether the two Area objects (this and a) refer to the same location
@@ -75,13 +115,6 @@ package src;
  *          toString in class Object
  *      Specified by:
  *          toString in interface Area
- * 
- *  public void setScene()         TODO: Finish comments
- *  public Scene getScene()
- *  public boolean shoot()
- *  public void wrap()
- *  public ArrayList<Role> getAvailableRoles()
- *  public int getShotsRemaining()
  * 
  * INHERITED METHODS:
  *  Standard java.lang.Object inheritance
@@ -111,11 +144,21 @@ public class Set implements Area {
     public void setName(String name){
         this.name = name;
     }
+    
+    public void setShots(int shots) {
+        this.shots = shots;
+    }
+
+    public void setScene(Scene scene) {
+        currentScene = scene;
+    }
+
     public void addNeighbor(String name) {
         neighbors.add(name);
     }
-    public void setShots(int shots) {
-        this.shots = shots;
+
+    public void addRole(Role r) {
+        offRoles.add(r);
     }
 
     public void resetSet() {
@@ -123,50 +166,6 @@ public class Set implements Area {
         for(Role role : offRoles) {
             role.freeRole();
         }
-    }
-
-    public void addRole(Role r) {
-        offRoles.add(r);
-    }
-
-    public String getName() {
-        return name;
-    }
-    public ArrayList<String> getNeighbors() {
-        return neighbors;
-    }
-    public boolean equals(Area a) {
-        return (this.name).equals(a.getName());
-    }
-    public String toString() {
-        return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + shotsRemaining + " shots";
-    }
-    
-    public void setScene(Scene scene) {
-        currentScene = scene;
-    }
-
-    public Scene getScene() {
-        return currentScene;
-    }
-
-    public ArrayList<Role> getAvailableRoles() {
-        ArrayList<Role> availableRoles = new ArrayList<Role>();
-        for (Role role : offRoles) {
-            if (role.checkOpen()) {
-                availableRoles.add(role);
-            }
-        }
-        for (Role role : currentScene.getRoles()) {
-            if (role.checkOpen()) {
-                availableRoles.add(role);
-            }
-        }
-        return availableRoles;
-    }
-
-    public int getShotsRemaining() {
-        return shotsRemaining;
     }
 
     public boolean shoot(int rehearsalChips) {
@@ -190,6 +189,7 @@ public class Set implements Area {
                 role.getPlayer().removeRole();
             }
         }
+        Collections.reverse(rolesOnCard);
         for (Role role : offRoles) {
             if (!role.checkOpen()) {
                 rolesOffCard.add(role);
@@ -201,7 +201,6 @@ public class Set implements Area {
         currentScene = null;
     }
 
-    //TODO: make output prettier
     private void payout(ArrayList<Role> rolesOnCard, ArrayList<Role> rolesOffCard) {
         if (rolesOnCard.size() > 0) {
             System.out.println("\n\tPayout:\n\t-------");
@@ -236,5 +235,43 @@ public class Set implements Area {
             total += random.nextInt(sides) + 1;
         }
         return total;
+    }
+
+    public ArrayList<Role> getAvailableRoles() {
+        ArrayList<Role> availableRoles = new ArrayList<Role>();
+        for (Role role : offRoles) {
+            if (role.checkOpen()) {
+                availableRoles.add(role);
+            }
+        }
+        for (Role role : currentScene.getRoles()) {
+            if (role.checkOpen()) {
+                availableRoles.add(role);
+            }
+        }
+        return availableRoles;
+    }
+
+    public int getShotsRemaining() {
+        return shotsRemaining;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public ArrayList<String> getNeighbors() {
+        return neighbors;
+    }
+
+    public Scene getScene() {
+        return currentScene;
+    }
+
+    public boolean equals(Area a) {
+        return (this.name).equals(a.getName());
+    }
+
+    public String toString() {
+        return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + shotsRemaining + " shots";
     }
 }

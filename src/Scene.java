@@ -35,6 +35,18 @@ package src;
  *      Parameters:
  *          role - the new role to add to the scene
  * 
+ *  public ArrayList<Role> getRoles()
+ *      Returns list of roles on this card
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.onRoles
+ * 
+ *  public int getBudget()
+ *      Returns the budget of this card
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.budget
+ * 
  *  public String toString()
  *      Returns a string representation of the Scene
  *      Author: Noah Duggan Erickson

@@ -1,5 +1,54 @@
 package src;
 
+/**
+ * Title: Board
+ * Author: Daniel Wertz
+ * CSCI 345
+ * Spring 2023
+ * 
+ * DESCRIPTION:
+ * Singleton representing the game board, including the deck and active scenes.
+ * 
+ * METHODS:
+ *  public void placeNewScenes()
+ *      Places new scenes on the board by taking  the top 10 cards 
+ *          from the deck and assigning them to sets.
+ *      Author: Daniel Wertz
+ * 
+ *  public void removeScene(Scene scene)
+ *      Removes the given scene from the list of active scenes.
+ *      Author: Daniel Wertz
+ *      Parameters:
+ *          scene - the scene to remove
+ * 
+ *  public int getActiveSceneCount()
+ *      Returns the number of active scenes on the board.
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          the number of active scenes
+ * 
+ *  public Area getArea(String areaName)
+ *      Returns the area with the given name.
+ *      Author: Daniel Wertz
+ *      Parameters:
+ *          areaName - the name of the area to retrieve
+ *      Returns:
+ *          Area object with the given name
+ * 
+ *  public void printBoard()
+ *      Prints the Areas on the board and information on their scenes and neighbors.
+ *      Author: Daniel Wertz
+ * 
+ *  public static Board getInstance()
+ *      Returns singleton instance of Board.
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          instance of Board
+ * 
+ * INHERITED METHODS:
+ *  Standard java.lang.Object inheritance
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -34,7 +83,7 @@ public class Board {
             activeScenes.add(cardDeck.get(0));
             cardDeck.remove(0);
         }
-
+        
         int i = 0;
         for(Area area : areas) {
             if (area instanceof Set) {
@@ -42,16 +91,6 @@ public class Board {
                 i++;
             }
         }
-    }
-
-    public Area getArea(String areaName) {
-        for(Area area : areas) {
-            if(area.getName().equals(areaName)) {
-                return area;
-            }
-        }
-        // TODO: throw exception or something
-        return null;
     }
 
     public void removeScene(Scene scene) {
@@ -62,17 +101,16 @@ public class Board {
         return activeScenes.size();
     }
 
-    public static Board getInstance(){
-        return instance;
-    }
-
-    // Print board for debugging
-    public void printBoard() {
-        for (Area area : areas) {
-            System.out.println(area.getName() + "\n\t" + area.getNeighbors());
-            if (area instanceof Set) {
-                System.out.println("\tActice Scene: " + ((Set)area).getScene().toString());
+    public Area getArea(String areaName) {
+        for(Area area : areas) {
+            if(area.getName().equals(areaName)) {
+                return area;
             }
         }
+        return null;
+    }
+
+    public static Board getInstance(){
+        return instance;
     }
 }

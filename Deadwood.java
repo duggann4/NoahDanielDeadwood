@@ -1,5 +1,24 @@
 import src.*;
 
+/**
+ * Title: Deadwood
+ * Authors: Daniel Wertz
+ * CSCI 345
+ * Spring 2023
+ * 
+ * DESCRIPTION:
+ *  Main class for the Deadwood game. This class is responsible for
+ *  running the game and handling the overarching game logic
+ * 
+ * METHODS:
+ *  public static void main(String args[])
+ *      This method is the starting point of the program. It first checks
+ *      for the number of players provided as a command line argument, then
+ *      sets up the game accordingly. It then runs the game until the number 
+ *      of days reaches 0, with each day consisting of several turns by each
+ *      player. Finally, it scores the game and displays results before closing.
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -20,22 +39,12 @@ public class Deadwood {
             view.print("Number of players must be between 2 and 8.");
             return;
         }
+
         setup(numPlayers);
         for(int day = 1; day <= numberOfDays; day++) {
-            view.print("\n============ Start Day " + day + " ============\n");
-            while (board.getActiveSceneCount() > 1) {
-                for (Player player : players) {
-                    player.playTurn();
-                    view.print("\n------------ Ending Turn ------------\n");
-                    if (board.getActiveSceneCount() <= 1) { //TODO: better loop logic
-                        break;
-                    }
-                }
-            }
-            endDay();
+            playDay(day);
         }
-        view.print("\n============ Ending Final Day ============n");
-        score();
+        endGame();
     }
 
     private static void setup(int numPlayers) {
@@ -50,7 +59,6 @@ public class Deadwood {
         }
         board.placeNewScenes();
         //board.printBoard();
-
         for(Player player : players) {
             player.setArea(board.getArea("trailer"));
         }
@@ -71,12 +79,25 @@ public class Deadwood {
         } else if (numPlayers >= 7 && numPlayers <= 8) {
             rank = 2;
         }
-
         for (int i = 0; i < numPlayers; i++) {
             view.print("\nEnter name for player " + (i+1) + ":");
-            String name = view.getString();
+            String name = view.readString();
             players.add(new Player(name, rank, credits));
         }
+    }
+
+    private static void playDay(int day) {
+        view.print("\n==================== Start Day " + day + " ====================");
+        while (board.getActiveSceneCount() > 1) {
+            for (Player player : players) {
+                player.playTurn();
+                view.print("\n-------------------- Ending Turn --------------------");
+                if (board.getActiveSceneCount() <= 1) {
+                    break;
+                }
+            }
+        }
+        endDay();
     }
 
     private static void endDay() {
@@ -87,13 +108,19 @@ public class Deadwood {
         board.placeNewScenes();
     }
 
+    private static void endGame() {
+        view.print("\n==================== Ending Final Day ====================");
+        score();
+        close();
+    }
+
     private static void score() {
         int highScore = 0;
         Player winner = null;
+        view.print("\n\tScore Board:\n\t------------");
         for (Player player : players) {
             int score = player.getScore();
-            view.print("\n\tScore Board:\n\t------------");
-            view.print("\t" + player.getName() + " scored " + score + " points!");
+            view.print("\t" + player.getName() + " scored " + score + " points.");
             if (score > highScore) {
                 highScore = score;
                 winner = player;
@@ -103,6 +130,6 @@ public class Deadwood {
     }
 
     private static void close() {
-
+        // Anything we need to do here?
     }
 }
