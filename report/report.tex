@@ -10,29 +10,34 @@
 \chapter{Cohesion}
 \begin{itemize}
     \item Deadwood:
-    \item Area:
-    \item Board:
+
+    Main() and setup() are procedural, since the elements are disjoint except by order of operations. welcomeMessage() is functional as a result of its simplicity. createPlayers() is functional as well? playDay() functional for the same reason?
+    Temporal 
+    \item Area: Functional interface
+    \item Board: Communicational
+    \item Parser: Logical, since the methods implemented here are completely disjoint, except in overarching purpose
     \item BoardParser: Functional, as all public-facing methods are focused on the creation of the board; private methods are helpers in this endeavor
     \item CardParser: Functional, as all public-facing methods are focused on the creation of the card deck; private methods are helpers to this objective
-    \item Player:
+    \item Player: Many methods in Player are procedurally cohesive, since they do many tasks that are not single-focused (e.g. talking to the user AND modifying data/controlling flow)
     \item Role:
     \item Scene:
     \item Set:
 \end{itemize}
 \chapter{Coupling}
 \begin{itemize}
-    \item Deadwood \& Board:
-    \item Deadwood \& Player:
-    \item Board \& Area:
-    \item Board \& Scene:
-    \item BoardParser \& Set: External via reliance on ArrayList
-    \item BoardParser \& Role: External via reliance on ArrayList
-    \item CardParser \& Scene: External via reliance on ArrayList, but also data, since setters are minimal
-    \item CardParser \& Role: External Coupling via reliance on ArrayList
-    \item Player \& Role:
-    \item Player \& Area:
-    \item Scene \& Role: External via reliance on ArrayList
-    \item Set \& Scene:
-    \item Set \& Role: External via reliance on ArrayList
+    \item Deadwood: data coupling with Board, Player
+    \item Area: INTERFACE!!! - no "real" coupling
+    \item Board: T-U coupling to the Area interface ans Scene
+    \item Parser: Data coupling with Role since data passed via simple arguments
+    \item BoardParser: Has T-U coupling to Parser since it is a P/C relationship, data coupling to Set since only passed via simple arguments
+    \item CardParser: T-U to Parser via P/C relationship,data coupling with Scene since data is only sent to scene via simple arguments
+    \item Player: data coupling with ViewHandler, Area, Board(?), Upgrade, stamp coupling to Office
+    \item Role: dataCoupling with Player via accessing rank
+    \item Scene: data coupling to Role in addRole() setter
+    \item Set: stamp coupling with Role and Board
+    \item Office: anything calling getUpgrade needs intimate knowledge of how Upgrades are stored
+    \item Trailer: Really basic; nothing to see here
+    \item Upgrade: nothing to see here
+    \item ViewHandler: nothing to see here
 \end{itemize}
 \end{document}
