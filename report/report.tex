@@ -14,10 +14,10 @@
     Main() and setup() are procedural, since the elements are disjoint except by order of operations. welcomeMessage() is functional as a result of its simplicity. createPlayers() is functional as well? playDay() functional for the same reason?
     Temporal 
     \item Area: Functional interface
-    \item Board: Communicational
+    \item Board: Logical
     \item Parser: Logical, since the methods implemented here are completely disjoint, except in overarching purpose
-    \item BoardParser: Functional, as all public-facing methods are focused on the creation of the board; private methods are helpers in this endeavor
-    \item CardParser: Functional, as all public-facing methods are focused on the creation of the card deck; private methods are helpers to this objective
+    \item BoardParser: communicational with hints of functional, as all public-facing methods are focused on the creation of the board; private methods are helpers in this endeavor
+    \item CardParser: communicational with hints of functional, as all public-facing methods are focused on the creation of the card deck; private methods are helpers to this objective
     \item Player: Many methods in Player are procedurally cohesive, since they do many tasks that are not single-focused (e.g. talking to the user AND modifying data/controlling flow)
     \item Role:
     \item Scene:
@@ -25,16 +25,16 @@
 \end{itemize}
 \chapter{Coupling}
 \begin{itemize}
-    \item Deadwood: data coupling with Board, Player
+    \item Deadwood: data coupling with Board, Player, message with ViewHandler
     \item Area: INTERFACE!!! - no "real" coupling
-    \item Board: T-U coupling to the Area interface ans Scene
+    \item Board: T-U coupling to the Area interface and Scene, message with ViewManager
     \item Parser: Data coupling with Role since data passed via simple arguments
     \item BoardParser: Has T-U coupling to Parser since it is a P/C relationship, data coupling to Set since only passed via simple arguments
     \item CardParser: T-U to Parser via P/C relationship,data coupling with Scene since data is only sent to scene via simple arguments
     \item Player: data coupling with ViewHandler, Area, Board(?), Upgrade, stamp coupling to Office
     \item Role: dataCoupling with Player via accessing rank
     \item Scene: data coupling to Role in addRole() setter
-    \item Set: stamp coupling with Role and Board
+    \item Set: stamp coupling with Role and Board, message with ViewHandler
     \item Office: anything calling getUpgrade needs intimate knowledge of how Upgrades are stored
     \item Trailer: Really basic; nothing to see here
     \item Upgrade: nothing to see here
