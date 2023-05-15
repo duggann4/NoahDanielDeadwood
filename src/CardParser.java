@@ -41,11 +41,8 @@ package src;
  * INHERITED METHODS:
  *  Standard java.lang.Object inheritance
  */
-import java.io.File;
-import java.io.IOException;
+
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Arrays;
 
 public class CardParser extends Parser{
 
