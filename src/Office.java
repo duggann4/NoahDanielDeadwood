@@ -11,8 +11,8 @@ package src;
  *      used to represent the Office area of the board
  * 
  * CONSTRUCTORS:
- *  public Trailer()
- *      Creates a new Trailer object with non-null but empty field values
+ *  public Office()
+ *      Creates a new Office object with non-null but empty field values
  *      Author: Noah Duggan Erickson
  * 
  * METHODS:
@@ -61,59 +61,79 @@ package src;
  *      Parameters:
  *          name - the new Area.name to add as a neighbor
  * 
- *  public static Trailer getInstance()
- *      Artefact of the singleton design
- *      Author: Noah Duggan Erickson
+ *  public Upgrade getUpgrade(int index)
+ *      Returns an upgrade from the upgrades HashMap
+ *          based on the Integer key
+ *      Author: Daniel Wertz
  *      Returns:
- *          the Office object
+ *          Specified upgrade
  * 
- *  public ArrayList<Upgrade> getUpgrades()
- *      Returns a list of all possible upgrades
- *      Author: Noah Duggan Erickson
- *      Returns:
- *          ArrayList<String> with all possible upgrades
- * 
- *  public void addUpgrade(String line){
- *      Adds an upgrade to the list of possible
+ *  public void addUpgrade(String line)
+ *      Adds an upgrade to the HashMap of possible
  *          upgrades as a line from the xml file
  *      Author: Noah Duggan Erickson
  *      Parameters:
  *          line - line of the board.xml file
  *              to parse into an upgrade object
  * 
+ *  public boolean validateUpgrade(int option, int amount)
+ *      Checks if user has enough of the corrisponding currency type
+ *          to pay for upgrade
+ *      Author: Daniel Wertz
+ *      Parameters:
+ *          option - key for upgrade in HashMap
+ *          amount - Player's currency 
+ *      Returns:
+ *          true if user can afford upgrade
+ * 
+ *  public static Office getInstance()
+ *      Artefact of the singleton design
+ *      Author: Noah Duggan Erickson
+ *      Returns:
+ *          the Office object
+ * 
  * INHERITED METHODS:
  *  Standard java.lang.Object inheritance
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Office implements Area{
+public class Office implements Area {
+
     private ArrayList<String> neighbors;
-    private ArrayList<Upgrade> upgrades;
+    private HashMap<Integer, Upgrade> upgrades;
     private static Office instance = new Office();
     private Office(){
         neighbors = new ArrayList<String>();
-        upgrades = new ArrayList<Upgrade>();
+        upgrades = new HashMap<Integer, Upgrade>();
     }
     public String getName(){
-        return "Office";
+        return "office";
     }
     public ArrayList<String> getNeighbors(){
         return instance.neighbors;
     }
-    public ArrayList<Upgrade> getUpgrades(){
-        return instance.upgrades;
+    public Upgrade getUpgrade(int index){
+        return instance.upgrades.get(index);
     }
     public boolean equals(Area a){
-        return a.getName().equals("Office");
+        return a.getName().equals("office");
     }
     public void addNeighbor(String name){
         instance.neighbors.add(name);
     }
-    public void addUpgrade(String line){
+    public void addUpgrade(String line) {
         String[] attrs = line.split("\"");
-        instance.upgrades.add(new Upgrade(Integer.parseInt(attrs[1]), attrs[3], Integer.parseInt(attrs[5])));
+        Upgrade upgrade = new Upgrade(Integer.parseInt(attrs[1]), attrs[3], Integer.parseInt(attrs[5]));
+        instance.upgrades.put(upgrades.size() + 1, upgrade);
     }
+
+    public boolean validateUpgrade(int option, int amount) {
+        Upgrade upgrade = upgrades.get(option);
+        return upgrade.getAmt() <= amount;
+    }
+
     public static Office getInstance(){
         return instance;
     }

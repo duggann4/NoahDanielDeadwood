@@ -110,7 +110,7 @@ public class BoardParser extends Parser{
     private static void readParts(String line, Set s){
         line = scan.nextLine();
         while(!line.contains("</parts>")){
-            s.addRole(readPart(line));
+            s.addRole(readPart(line, false));
             line = scan.nextLine();
         }
     }

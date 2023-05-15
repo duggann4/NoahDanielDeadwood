@@ -39,36 +39,61 @@ package src;
  *          true if the player was successful in taking
  *              the role, false otherwise
  * 
+ *  public void freeRole()
+ *      Marks the role as open
+ *      Author: Daniel Wertz
+ * 
+ *  public boolean checkOpen()
+ *      Returns the state of the role (open or taken)
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          true if the role is open
+ * 
+ *  public boolean checkOnCard()
+ *      Returns whether the role is on-card or off-card
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          true if the role is on-card
+ * 
  *  public String getName()
  *      Returns the name of the role
- *      Author: Noah Duggan Erickson
+ *      Author: Daniel Wertz
  *      Returns:
  *          this.name
  * 
- *  public String toString()
- *      Returns a string representation of the role
- *      Author: Noah Duggan Erickson
+ *  public Player getPlayer()
+ *      Returns the player assigned to the role
+ *      Author: Daniel Wertz
  *      Returns:
- *          string representation of this role
- *      Overrides:
- *          toString in class Object
+ *          this.player
+ * 
+ *  public int getRank()
+ *      Returns the required rank to take the role
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.rank
  * 
  * INHERITED METHODS:
  *  Standard java.lang.Object inheritance
  */
 
 public class Role {
+    
+    private Player player;
     private String name;
     private String flavorLine;
     private int rankRequired;
     private boolean roleOpen;
+    private boolean onCard;
 
-    public Role(){
+    public Role() {
         // Called exclusively from parsers
+        player = null;
         name = "";
         flavorLine = "";
         rankRequired = 0;
         roleOpen = true;
+        onCard = false;
     }
 
     public void setBasic(String name, int rank){
@@ -80,8 +105,13 @@ public class Role {
         this.flavorLine = flavor;
     }
 
-    public boolean takeRole(int pRank){
-        if(roleOpen && pRank >= rankRequired){
+    public void setOnCard(boolean onCard) {
+        this.onCard = onCard;
+    }
+
+    public boolean takeRole(Player player){
+        if(roleOpen && player.getRank() >= rankRequired){
+            this.player = player;
             roleOpen = false;
             return true;
         } else {
@@ -89,11 +119,31 @@ public class Role {
         }
     }
 
+    public void freeRole() {
+        roleOpen = true;
+    }
+
+    public boolean checkOpen() {
+        return roleOpen;
+    }
+
+    public boolean checkOnCard() {
+        return onCard;
+    }
+
     public String getName() {
         return name;
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public int getRank() {
+        return rankRequired;
+    }
+
     public String toString(){
-        return name + ", \"" + flavorLine + "\" requires rank " + rankRequired;
+        return name + ", \"" + flavorLine + "\" | Rank: " + rankRequired;
     }
 }

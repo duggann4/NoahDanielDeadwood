@@ -35,6 +35,18 @@ package src;
  *      Parameters:
  *          role - the new role to add to the scene
  * 
+ *  public ArrayList<Role> getRoles()
+ *      Returns list of roles on this card
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.onRoles
+ * 
+ *  public int getBudget()
+ *      Returns the budget of this card
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.budget
+ * 
  *  public String toString()
  *      Returns a string representation of the Scene
  *      Author: Noah Duggan Erickson
@@ -56,6 +68,7 @@ package src;
 import java.util.ArrayList;
 // Note to self: This class represents the cards
 public class Scene{
+    private String title;
     private String flavor;
     private int sceneNo;
     private int budget;
@@ -80,13 +93,22 @@ public class Scene{
     public void addRole(Role role){
         onRoles.add(role);
     }
+
+    public ArrayList<Role> getRoles() {
+        return onRoles;
+    }
+
+    public int getBudget() {
+        return budget;
+    }
+
     public String toString(){
-        return title + " scene " + sceneNo;
+        return title + ", Budget: " + budget;
     }
 
     // Because it's *flavorful*...? No? Tough crowd I guess...
     //
     public String tastyString(){
-        return title + "(" + sceneNo + "), Budget:" + budget + flavor;
+        return title + " (" + sceneNo + "), Budget: " + budget + flavor;
     }
 }
