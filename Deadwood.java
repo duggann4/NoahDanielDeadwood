@@ -126,7 +126,7 @@ public class Deadwood {
                 winner = player;
             }
         }
-        view.print("\nCongradulations " + winner.getName() + ", you won!\n");
+        view.print("\nCongratulations " + winner.getName() + ", you won!\n");
     }
 
     private static void close() {
