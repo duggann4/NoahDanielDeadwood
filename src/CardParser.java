@@ -1,17 +1,53 @@
 package src;
 
+/**
+ * Title: CardParser
+ * Author: Noah Duggan Erickson
+ * CSCI 345
+ * Spring 2023
+ * 
+ * DESCRIPTION:
+ *  Reads and parses an xml file containing card-related information in the
+ *      format specified below into objects that are used elsewhere in the
+ *      program.
+ * 
+ *  File Format:
+ *      The element containing card data must be called "card" with the name
+ *          and integer budget as attributes, in that order.
+ *      Card elements must have children "part" and any number of "roles".
+ *      Part elements must have an integer sceneID number as attribute, and
+ *          contain a string (can be multiline).
+ *      Specification for Roles provided in Parser.
+ * 
+ * CONSTRUCTORS:
+ *  CardParser(String filepath)
+ *      Constructs a new CardParser object and attempts to open the file
+ *          at provided path.
+ *      Author: Noah Duggan Erickson
+ *      Parameters:
+ *          filepath - path to the file to parse
+ *              REPO INFO: If the structure of the NoahDanielDeadwood repo
+ *                  is unchanged, path is "../data/cards.xml"
+ *      Error codes:
+ *          51: Problem opening file
+ * 
+ * METHODS:
+ *  public ArrayList<Scene> readCards()
+ *      Executes the parser on the provided file
+ *      Author: Noah Duggan Erickson
+ *      Returns:
+ *          ArrayList containing Scene objects read from the file
+ * 
+ * INHERITED METHODS:
+ *  Standard java.lang.Object inheritance
+ */
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Arrays;
 
-
-// ERROR EXIT CODES:
-//   51: Could not open cards.xml
-public class CardParser {
-    private static File f;
-    private static Scanner scan;
+public class CardParser extends Parser{
 
     public CardParser(String filepath){
         openFile(filepath);
@@ -28,16 +64,6 @@ public class CardParser {
         return out;
     }
 
-    private static void openFile(String path){
-        try{
-            f = new File(path);
-            scan = new Scanner(f);
-        } catch(IOException e){
-            System.err.println("Problem opening file!");
-            System.exit(51);
-        }
-    }
-
     private static Scene readCard(String line){
         Scene s = new Scene();
         String[] attrs = line.split("\"");
@@ -49,7 +75,7 @@ public class CardParser {
             if(line.contains("<scene ")){
                 readFlavor(line, s);
             } else if(line.contains("<part ")){
-                s.addRole(readPart(line));
+                s.addRole(readPart(line, true));
             }
         }
         return s;
@@ -65,21 +91,4 @@ public class CardParser {
         }
         s.setFlavor(sceneNo, flavorText);
     }
-
-    private static Role readPart(String line){
-        Role role = new Role();
-        String flavorText = "";
-        String[] attrs = line.split("\"");
-        role.setBasic(attrs[1], Integer.parseInt(attrs[3]));
-        line = scan.nextLine();
-        while(!line.contains("</part>")){
-            if(line.contains("<line>")){
-                flavorText = line.replaceAll("<line>", "").replaceAll("</line>", "").trim();
-            }
-            line = scan.nextLine();
-        }
-        role.setFlavor(flavorText);
-        return role;
-    }
-
 }
