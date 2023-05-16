@@ -96,12 +96,12 @@ public class Role {
         onCard = false;
     }
 
-    public void setBasic(String name, int rank){
+    public void setBasic(String name, int rank) {
         this.name = name;
         this.rankRequired = rank;
     }
 
-    public void setFlavor(String flavor){
+    public void setFlavor(String flavor) {
         this.flavorLine = flavor;
     }
 
@@ -109,8 +109,8 @@ public class Role {
         this.onCard = onCard;
     }
 
-    public boolean takeRole(Player player){
-        if(roleOpen && player.getRank() >= rankRequired){
+    public boolean takeRole(Player player) {
+        if (roleOpen && player.getRank() >= rankRequired) {
             this.player = player;
             roleOpen = false;
             return true;
@@ -143,7 +143,7 @@ public class Role {
         return rankRequired;
     }
 
-    public String toString(){
+    public String toString() {
         return name + ", \"" + flavorLine + "\" | Rank: " + rankRequired;
     }
 }

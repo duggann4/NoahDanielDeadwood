@@ -57,7 +57,7 @@ public class Upgrade { // implements Comparable<Player>?
     private int level;
     private String curType;
     private int amt;
-    public Upgrade(int level, String curType, int amt){
+    public Upgrade(int level, String curType, int amt) {
         this.level = level;
         this.curType = curType;
         this.amt = amt;

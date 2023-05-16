@@ -76,25 +76,25 @@ import java.util.ArrayList;
 public class Trailer implements Area{
     private ArrayList<String> neighbors;
     private static Trailer instance = new Trailer();
-    private Trailer(){
+    private Trailer() {
         neighbors = new ArrayList<String>();
     }
-    public String getName(){
+    public String getName() {
         return "trailer";
     }
-    public ArrayList<String> getNeighbors(){
+    public ArrayList<String> getNeighbors() {
         return instance.neighbors;
     }
-    public boolean equals(Area a){
+    public boolean equals(Area a) {
         return a.getName().equals("trailer");
     }
-    public String toString(){
+    public String toString() {
         return "trailer";
     }
-    public void addNeighbor(String name){
+    public void addNeighbor(String name) {
         instance.neighbors.add(name);
     }
-    public static Trailer getInstance(){
+    public static Trailer getInstance() {
         return instance;
     }
 }
