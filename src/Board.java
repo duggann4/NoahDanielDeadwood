@@ -36,7 +36,8 @@ package src;
  *          Area object with the given name
  * 
  *  public void printBoard()
- *      Prints the Areas on the board and information on their scenes and neighbors.
+ *      Prints the Areas on the board and information on their 
+ *          neighbors, scenes, and players.
  *      Author: Daniel Wertz
  * 
  *  public static Board getInstance()
@@ -58,7 +59,7 @@ public class Board {
     private ArrayList<Scene> activeScenes = new ArrayList<Scene>();
     private ArrayList<Scene> cardDeck;
     private static Board instance = new Board();
-    private Board(){
+    private Board() {
         BoardParser boardParser = new BoardParser("data/board.xml");
         ArrayList<Set> sets = boardParser.readBoard();
         areas.add(Trailer.getInstance());
@@ -110,7 +111,18 @@ public class Board {
         return null;
     }
 
-    public static Board getInstance(){
+    public void printBoard() {
+        System.out.println();
+        for (Area area : areas) {
+            System.out.println(area.getName() + "\n\tNeighbors: " + area.getNeighbors());
+            if (area instanceof Set) {
+                System.out.println("\tActice Scene: " + ((Set)area).getScene().toString());
+            }
+        }
+        System.out.println();
+    }
+
+    public static Board getInstance() {
         return instance;
     }
 }

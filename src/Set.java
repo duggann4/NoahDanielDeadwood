@@ -6,7 +6,7 @@ package src;
  * CSCI 345
  * Spring 2023
  * 
- * DESCRIPTION:
+ * DESCRIPTION: TODO: description
  * CONSTRUCTORS:
  *  public Set()
  *      Creates a new Scene object with non-null but empty field values
@@ -141,7 +141,7 @@ public class Set implements Area {
         offRoles = new ArrayList<Role>();
         shotsRemaining = 0;
     }
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
     
@@ -163,7 +163,7 @@ public class Set implements Area {
 
     public void resetSet() {
         shotsRemaining = shots;
-        for(Role role : offRoles) {
+        for (Role role : offRoles) {
             role.freeRole();
         }
     }
@@ -180,7 +180,6 @@ public class Set implements Area {
     }
 
     public void wrap() {
-        System.out.println("\nScene completed!");
         ArrayList<Role> rolesOnCard = new ArrayList<Role>();
         ArrayList<Role> rolesOffCard = new ArrayList<Role>();
         for (Role role : currentScene.getRoles()) {
@@ -202,8 +201,9 @@ public class Set implements Area {
     }
 
     private void payout(ArrayList<Role> rolesOnCard, ArrayList<Role> rolesOffCard) {
+        ViewHandler view = ViewHandler.getInstance();
         if (rolesOnCard.size() > 0) {
-            System.out.println("\n\tPayout:\n\t-------");
+            view.print("\n\tPayout:\n\t-------");
             ArrayList<Integer> diceRolls = new ArrayList<Integer>();
             for (int i = 0; i < currentScene.getBudget(); i++) {
                 diceRolls.add(rollDice(1, 6));
@@ -218,14 +218,14 @@ public class Set implements Area {
                 Player player = rolesOnCard.get(playerNum).getPlayer();
                 player.addDollars(roll);
                 playerNum++;
-                System.out.println("\t" + player.getName() + " Gained " + roll + " Dollars!");
+                view.print("\t" + player.getName() + " Gained " + roll + " Dollars!");
             }
             for (Role role : rolesOffCard) {
                 role.getPlayer().addDollars(role.getRank());
-                System.out.println("\t" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
+                view.print("\t" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
             }
         } else {
-            System.out.println("No players acting on any on card roles, so no bonus pay...");
+            view.print("No players acting on any on card roles, so no bonus pay...");
         }
     }
 

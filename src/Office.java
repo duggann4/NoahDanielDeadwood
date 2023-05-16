@@ -104,23 +104,26 @@ public class Office implements Area {
     private ArrayList<String> neighbors;
     private HashMap<Integer, Upgrade> upgrades;
     private static Office instance = new Office();
-    private Office(){
+    private Office() {
         neighbors = new ArrayList<String>();
         upgrades = new HashMap<Integer, Upgrade>();
     }
-    public String getName(){
+    public String getName() {
         return "office";
     }
-    public ArrayList<String> getNeighbors(){
+    public ArrayList<String> getNeighbors() {
         return instance.neighbors;
     }
-    public Upgrade getUpgrade(int index){
+    public Upgrade getUpgrade(int index) {
         return instance.upgrades.get(index);
     }
-    public boolean equals(Area a){
+    public boolean equals(Area a) {
         return a.getName().equals("office");
     }
-    public void addNeighbor(String name){
+    public String toString() {
+        return "office";
+    }
+    public void addNeighbor(String name) {
         instance.neighbors.add(name);
     }
     public void addUpgrade(String line) {
@@ -134,7 +137,7 @@ public class Office implements Area {
         return upgrade.getAmt() <= amount;
     }
 
-    public static Office getInstance(){
+    public static Office getInstance() {
         return instance;
     }
 }

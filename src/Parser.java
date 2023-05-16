@@ -50,26 +50,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public abstract class Parser {
-    static File f;
-    static Scanner scan;
+    protected static File file;
+    protected static Scanner scan;
 
-    static void openFile(String path){
-        try{
-            f = new File(path);
-            scan = new Scanner(f);
-        } catch(IOException e){
+    protected static void openFile(String path) {
+        try {
+            file = new File(path);
+            scan = new Scanner(file);
+        } catch(IOException e) {
             System.err.println("Problem opening file!");
             System.exit(51);
         }
     }
 
-    static Role readPart(String line, boolean onCard){
+    protected static Role readPart(String line, boolean onCard) {
         Role role = new Role();
         String flavorText = "";
         String[] attrs = line.split("\"");
         role.setBasic(attrs[1], Integer.parseInt(attrs[3]));
         line = scan.nextLine();
-        while(!line.contains("</part>")){
+        while(!line.contains("</part>")) {
             if(line.contains("<line>")){
                 flavorText = line.replaceAll("<line>", "").replaceAll("</line>", "").trim();
             }

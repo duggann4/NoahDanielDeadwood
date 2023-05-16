@@ -98,23 +98,29 @@ public class Player {
     }
 
     private void move() {
-        view.print("Would you like to move?\n\t0: Yes\n\t1: No");
-        int input = view.readOption(1);
-        if (input == 0) {
-            ArrayList<String> neighbors = currentArea.getNeighbors();
-            view.print("\nSelect a neighboring area to move to:");
-            view.print("\t0: Remain at current location");
-            for (String neighbor : neighbors) {
-                view.print("\t" + (neighbors.indexOf(neighbor) + 1) + ": " + neighbor);
-            }
-            input = view.readOption(neighbors.size());
+        int input;
+        do {
+            view.print("Would you like to move?\n\t0: Yes\n\t1: No\n\t2: View board");
+            input = view.readOption(2);
             if (input == 0) {
-                view.print("\nYour location remains at the " + currentArea.getName() + ".");
-            } else {
-                currentArea = Board.getInstance().getArea(neighbors.get(input - 1));
-                view.print("\nYou have moved to the " + currentArea.getName() + ".");
+                ArrayList<String> neighbors = currentArea.getNeighbors();
+                view.print("\nSelect a neighboring area to move to:");
+                view.print("\t0: Remain at current location");
+                for (String neighbor : neighbors) {
+                    view.print("\t" + (neighbors.indexOf(neighbor) + 1) + ": " + neighbor);
+                }
+                input = view.readOption(neighbors.size());
+                if (input == 0) {
+                    view.print("\nYour location remains at the " + currentArea.getName() + ".");
+                } else {
+                    currentArea = Board.getInstance().getArea(neighbors.get(input - 1));
+                    view.print("\nYou have moved to the " + currentArea.getName() + ".");
+                }
+            } else if (input == 2) {
+                Board.getInstance().printBoard();
             }
-        }
+        } while (input == 2);
+
         if (currentArea instanceof Set) {
             if (((Set)currentArea).getScene() != null) {
                 takeRole(((Set)currentArea).getAvailableRoles());
@@ -132,8 +138,9 @@ public class Player {
         if (input == 1) {
             return;
         }
-        Office office = Office.getInstance();
-        view.print("\nSelect an upgrade to purchase:");
+        Office office = ((Office)currentArea);
+        view.print("\nCurrent rank: " + rank + ", Credits: " + credits + ", Dollars: " + dollars);
+        view.print("Select an upgrade to purchase:");
         view.print("\t0: Cancel upgrade");
         for (int i = 1; i <= 10; i++) {
             if (i == 6) {
@@ -221,7 +228,8 @@ public class Player {
                 credits++;
                 dollars++;
             }
-            if(((Set)currentArea).getShotsRemaining() == 0) {
+            if (((Set)currentArea).getShotsRemaining() == 0) {
+                view.print("\nScene completed!");
                 ((Set)currentArea).wrap();
             }
         } else {

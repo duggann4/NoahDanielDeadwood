@@ -74,7 +74,7 @@ public class Scene{
     private int budget;
     private ArrayList<Role> onRoles; // on-card
     
-    public Scene(){
+    public Scene() {
         title = "";
         flavor = "";
         sceneNo = 0;
@@ -82,15 +82,15 @@ public class Scene{
         onRoles = new ArrayList<Role>();
     }
 
-    public void setBasic(String title, int budget){
+    public void setBasic(String title, int budget) {
         this.title = title;
         this.budget = budget;
     }
-    public void setFlavor(int sceneNo, String flavor){
+    public void setFlavor(int sceneNo, String flavor) {
         this.sceneNo = sceneNo;
         this.flavor = flavor;
     }
-    public void addRole(Role role){
+    public void addRole(Role role) {
         onRoles.add(role);
     }
 
@@ -102,13 +102,13 @@ public class Scene{
         return budget;
     }
 
-    public String toString(){
+    public String toString() {
         return title + ", Budget: " + budget;
     }
 
     // Because it's *flavorful*...? No? Tough crowd I guess...
     //
-    public String tastyString(){
+    public String tastyString() {
         return title + " (" + sceneNo + "), Budget: " + budget + flavor;
     }
 }

@@ -111,7 +111,6 @@ public class Deadwood {
     private static void endGame() {
         view.print("\n==================== Ending Final Day ====================");
         score();
-        close();
     }
 
     private static void score() {
@@ -127,9 +126,5 @@ public class Deadwood {
             }
         }
         view.print("\nCongradulations " + winner.getName() + ", you won!\n");
-    }
-
-    private static void close() {
-        // Anything we need to do here?
     }
 }
