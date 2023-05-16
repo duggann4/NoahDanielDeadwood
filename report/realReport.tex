@@ -1,0 +1,67 @@
+\documentclass[letterpaper, twoside]{report}
+
+\title{CSCI 345: Cohesion/Coupling Write-up}
+\author{Noah Duggan Erickson, Daniel Wertz}
+\date{15 May 2023}
+
+\begin{document}
+\maketitle
+\section{Opening Remarks}
+In our implementation of Deadwood, it may be necessary to mention and discuss a few minor deviations from the spec in this repo.
+\subsection{Trello}
+The primary difference between the spec and this repo is our lack of Trello usage. In its place, we have opted to use GitHub Projects, due to its many advantages over Trello, such as direct integration with Issues and pull requests, lack of paywall, and only having one system to update with progress instead of two.
+
+If for any reason you have difficulty accessing the "Main" Project, please contact Noah at duggann@wwu.edu
+\subsection{User Interface}
+Primarily for the purposes of making the transition into Assignment 3 as smooth as possible, we have implemented a user interface that presents the user with numbered options instead of an open "language"
+\subsection{Repo structure}
+While the main \texttt{Deadwood.java} file is located in the root directory of the repo, all of the other files are located in the \texttt{src} directory.
+
+\chapter{Cohesion}
+
+Throughout the project, there is a large amount of procedural cohesion, which is used mainly to create the flow that a player navigates while taking a turn and the overarching flow of the game. Specifically, the Deadwood class is predominantly procedurally cohesive in controlling the flow of the game and the Player class in controlling the flow of a turn.
+
+Other classes in the project such as the extensions of Parser are related by sequential cohesion as the output of one method is the input of another method. For example, when a list of neighbors is read by BoardParser, the resulting list is passed back to the calling method in order to build the Set object.
+
+
+
+% \section{Deadwood}
+% The Deadwood class is largely characterized by procedural cohesion, since its methods (particularly \texttt{main()}) have a variety of responsibilities, and are related only by the order in which they are performed.
+% \section{Area}
+% Since Area is an interface, its cohesion largely depends on its implementations.
+% \section{Board}
+% The methods in the Board class are related by logical cohesion, as each method accomplishes different tasks relating to the state of the board.
+% \section{BoardParser}
+% At first glance, the methods in BoardParser appear to be related using functional cohesion, since they all contribute towards the common goal of parsing the board.xml file. However, closer inspection shows that the relationship between the methods is better explained by sequential cohesion, as the output of one method is used as input to another and controls the flow of that method.
+% \section{CardParser}
+% Similar to BoardParser, the methods in CardParser are related by sequential cohesion, since the output of a method can effect another method.
+% \section{Office}
+% The Office class uses logical cohesion, as it performs tasks relating to the Office's data, but are otherwise disjoint.
+% \section{Parser}
+% Since Parser is abstract, the cohesion of its methods are largely dependent on its extensions, especially since in isolation the methods provided by Parser are seemingly completely unrelated. Ideally, this class and its extensions would be refactored to create more "generic" versions of the methods implemented in the extensions.
+% \section{Player}
+% Many of the methods in Player are related by procedural cohesion, since they are related only by order of operations. 
+% \section{Role}
+% \section{Scene}
+% \section{Set}
+% \section{Trailer}
+% \section{Upgrade}
+% \section{ViewHandler}
+
+\chapter{Coupling}
+This project contains a large amount of data coupling, since most interactions between classes involve the two-way flow of information. 
+% \section{Deadwood}
+% \section{Area}
+% \section{Board}
+% \section{BoardParser}
+% \section{CardParser}
+% \section{Office}
+% \section{Parser}
+% \section{Player}
+% \section{Role}
+% \section{Scene}
+% \section{Set}
+% \section{Trailer}
+% \section{Upgrade}
+% \section{ViewHandler}
+\end{document}
