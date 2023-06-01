@@ -116,7 +116,12 @@ public class Board {
         for (Area area : areas) {
             System.out.println(area.getName() + "\n\tNeighbors: " + area.getNeighbors());
             if (area instanceof Set) {
-                System.out.println("\tActice Scene: " + ((Set)area).getScene().toString());
+                if (((Set)area).getScene() != null) {
+                    System.out.println("\tActive Scene: " + ((Set)area).getScene().toString());
+                } else {
+                    System.out.println("\tActive Scene: None (completed)");
+                }
+                    
             }
         }
         System.out.println();

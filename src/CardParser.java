@@ -65,14 +65,15 @@ public class CardParser extends Parser{
         Scene s = new Scene();
         String[] attrs = line.split("\"");
         s.setBasic(attrs[1], Integer.parseInt(attrs[5]));
-        
+        String area = null;
 
         while (!line.contains("</card>")) {
             line = scan.nextLine();
             if (line.contains("<scene ")) {
                 readFlavor(line, s);
             } else if (line.contains("<part ")) {
-                s.addRole(readPart(line, true));
+                area = scan.nextLine();
+                s.addRole(readPart(line, area, true));
             }
         }
         return s;

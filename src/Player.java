@@ -70,7 +70,7 @@ package src;
 
 import java.util.ArrayList;
 
-public class Player {
+public class Player extends GUIElement {
     
     private String name;
     private int rank;
@@ -102,24 +102,26 @@ public class Player {
         do {
             view.print("Would you like to move?\n\t0: Yes\n\t1: No\n\t2: View board");
             input = view.readOption(2);
-            if (input == 0) {
-                ArrayList<String> neighbors = currentArea.getNeighbors();
-                view.print("\nSelect a neighboring area to move to:");
-                view.print("\t0: Remain at current location");
-                for (String neighbor : neighbors) {
-                    view.print("\t" + (neighbors.indexOf(neighbor) + 1) + ": " + neighbor);
-                }
-                input = view.readOption(neighbors.size());
-                if (input == 0) {
-                    view.print("\nYour location remains at the " + currentArea.getName() + ".");
-                } else {
-                    currentArea = Board.getInstance().getArea(neighbors.get(input - 1));
-                    view.print("\nYou have moved to the " + currentArea.getName() + ".");
-                }
-            } else if (input == 2) {
+            if (input == 2) {
                 Board.getInstance().printBoard();
             }
         } while (input == 2);
+
+        if (input == 0) {
+            ArrayList<String> neighbors = currentArea.getNeighbors();
+            view.print("\nSelect a neighboring area to move to:");
+            view.print("\t0: Remain at current location");
+            for (String neighbor : neighbors) {
+                view.print("\t" + (neighbors.indexOf(neighbor) + 1) + ": " + neighbor);
+            }
+            input = view.readOption(neighbors.size());
+            if (input == 0) {
+                view.print("\nYour location remains at the " + currentArea.getName() + ".");
+            } else {
+                currentArea = Board.getInstance().getArea(neighbors.get(input - 1));
+                view.print("\nYou have moved to the " + currentArea.getName() + ".");
+            }
+        }
 
         if (currentArea instanceof Set) {
             if (((Set)currentArea).getScene() != null) {

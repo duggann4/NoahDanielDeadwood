@@ -99,7 +99,7 @@ package src;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Office implements Area {
+public class Office extends GUIElement implements Area {
 
     private ArrayList<String> neighbors;
     private HashMap<Integer, Upgrade> upgrades;

@@ -73,7 +73,7 @@ package src;
 
 import java.util.ArrayList;
 
-public class Trailer implements Area{
+public class Trailer extends GUIElement implements Area {
     private ArrayList<String> neighbors;
     private static Trailer instance = new Trailer();
     private Trailer() {
