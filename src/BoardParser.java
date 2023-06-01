@@ -79,13 +79,39 @@ public class BoardParser extends Parser {
             line = scan.nextLine();
             if (line.contains("<neighbors>")) {
                 readNeighbors(line, s);
+            } else if (line.contains("<area ")) {
+                readArea(s, line);
             } else if (line.contains("<takes>")) {
                 s.setShots(countShots(line));
             } else if (line.contains("<parts>")) {
-                readParts(line, s);
+                readParts(s);
             }
         }
         return s;
+    }
+
+    private static void readTrailer(String line) {
+        while (!line.contains("</trailer")) {
+            if (line.contains("<neighbor n")) {
+                Trailer.getInstance().addNeighbor(line.split("\"")[1]);
+            } else if (line.contains("<area ")) {
+                readArea(Trailer.getInstance(), line);
+            }
+            line = scan.nextLine();
+        }
+    }
+
+    private static void readOffice(String line) {
+        while (!line.contains("</office")) {
+            if (line.contains("<neighbor n")) {
+                Office.getInstance().addNeighbor(line.split("\"")[1]);
+            } else if (line.contains("<area ") && Office.getInstance().getX() == 0) {
+                readArea(Office.getInstance(), line);
+            } else if (line.contains("<upgrade l")) {
+                Office.getInstance().addUpgrade(line);
+            }
+            line = scan.nextLine();
+        }
     }
 
     private static void readNeighbors(String line, Set s) {
@@ -107,33 +133,15 @@ public class BoardParser extends Parser {
         return n;
     }
 
-    private static void readParts(String line, Set s) {
-        line = scan.nextLine();
+    private static void readParts(Set s) {
+        String line = scan.nextLine();
+        String area = scan.nextLine();
         while (!line.contains("</parts>")) {
-            s.addRole(readPart(line, false));
+            s.addRole(readPart(line, area, false));
             line = scan.nextLine();
-        }
-    }
-
-    private static void readTrailer(String line) {
-        while (!line.contains("</trailer")) {
-            if (line.contains("<neighbor n")) {
-                Trailer.getInstance().addNeighbor(line.split("\"")[1]);
+            if (!line.contains("</parts>")) {
+                area = scan.nextLine();
             }
-            line = scan.nextLine();
         }
     }
-
-    private static void readOffice(String line) {
-        while (!line.contains("</office")) {
-            if (line.contains("<neighbor n")) {
-                Office.getInstance().addNeighbor(line.split("\"")[1]);
-            } else if (line.contains("<upgrade l")) {
-                Office.getInstance().addUpgrade(line);
-            }
-            line = scan.nextLine();
-        }
-    }
-
-    
 }

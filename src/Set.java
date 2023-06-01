@@ -124,7 +124,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class Set implements Area {
+public class Set extends GUIElement implements Area {
     private String name;
     private ArrayList<String> neighbors;
     private Scene currentScene;

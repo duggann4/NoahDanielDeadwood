@@ -77,7 +77,7 @@ package src;
  *  Standard java.lang.Object inheritance
  */
 
-public class Role {
+public class Role extends GUIElement{
     
     private Player player;
     private String name;
