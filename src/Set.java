@@ -19,11 +19,11 @@ package src;
  *      Parameters:
  *          name - the new name of the set
  * 
- *  public void setShots(int shots)
- *      Overrides the existing value for shotsRemaining
- *      Author: Noah Duggan Erickson
+ *  public void addShots(Arraylist<Shot> shots)
+ *      Adds Shot objects to set
+ *      Author: Daniel Wertz
  *      Parameters:
- *          shots - the new value of shotsRemaining
+ *          shots - ArrayList of Shot
  * 
  *  public void setScene(Scene scene)
  *      Overrides the existing value for currentScene
@@ -45,7 +45,7 @@ package src;
  *          role - the new role to add to the set\
  * 
  *  public void resetSet()
- *      Resets shotsRemaining and frees offRoles
+ *      Set all shots as incomplete and reset roles
  *      Author: Daniel Wertz
  * 
  *  public boolean shoot(int rehearsalChips)
@@ -67,10 +67,10 @@ package src;
  *          ArrayList of open roles
  * 
  *  public int getShotsRemaining()
- *      Returns shots remaining
+ *      Returns number of shots remaining
  *      Author: Daniel Wertz
  *      Returns:
- *          this.shotsRemaining
+ *          # of shots incomplete
  * 
  *  public String getName()
  *      Returns the name of the set
@@ -129,8 +129,7 @@ public class Set extends GUIElement implements Area {
     private ArrayList<String> neighbors;
     private Scene currentScene;
     private ArrayList<Role> offRoles; // off-card
-    private int shots;
-    private int shotsRemaining;
+    private ArrayList<Shot> shots;
     private Random random = new Random(); // for dice
 
     public Set() {
@@ -139,13 +138,12 @@ public class Set extends GUIElement implements Area {
         neighbors = new ArrayList<String>();
         currentScene = null;
         offRoles = new ArrayList<Role>();
-        shotsRemaining = 0;
     }
     public void setName(String name) {
         this.name = name;
     }
     
-    public void setShots(int shots) {
+    public void addShots(ArrayList<Shot> shots) {
         this.shots = shots;
     }
 
@@ -162,7 +160,9 @@ public class Set extends GUIElement implements Area {
     }
 
     public void resetSet() {
-        shotsRemaining = shots;
+        for (Shot shot : shots) {
+            shot.setComplete(false);
+        }
         for (Role role : offRoles) {
             role.freeRole();
         }
@@ -171,7 +171,12 @@ public class Set extends GUIElement implements Area {
     public boolean shoot(int rehearsalChips) {
         int roll = rollDice(1, 6) + rehearsalChips;
         if (roll >= currentScene.getBudget()) {
-            shotsRemaining--;
+            for (Shot shot : shots) {
+                if (!shot.checkComplete()) {
+                    shot.setComplete(true);
+                    break;
+                }
+            }
             return true;
         }
         else {
@@ -253,7 +258,13 @@ public class Set extends GUIElement implements Area {
     }
 
     public int getShotsRemaining() {
-        return shotsRemaining;
+        int n = 0;
+        for(Shot shot : shots) {
+            if(!shot.checkComplete()) {
+                n++;
+            }
+        }
+        return n;
     }
 
     public String getName() {
@@ -272,6 +283,6 @@ public class Set extends GUIElement implements Area {
     }
 
     public String toString() {
-        return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + shotsRemaining + " shots";
+        return name + " has " + neighbors.size() + " neighbors, " + offRoles.size() + " off-card roles, and " + getShotsRemaining() + " shots";
     }
 }

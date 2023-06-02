@@ -82,7 +82,7 @@ public class BoardParser extends Parser {
             } else if (line.contains("<area ")) {
                 readArea(s, line);
             } else if (line.contains("<takes>")) {
-                s.setShots(countShots(line));
+                s.addShots(parseShots(line));
             } else if (line.contains("<parts>")) {
                 readParts(s);
             }
@@ -123,14 +123,16 @@ public class BoardParser extends Parser {
         }
     }
 
-    private static int countShots(String line) {
-        int n = 0;
+    private static ArrayList<Shot> parseShots(String line) {
+        ArrayList<Shot> shots = new ArrayList<Shot>();
         line = scan.nextLine();
         while (!line.contains("</takes>")) {
-            n++;
+            Shot shot = new Shot();
+            readArea(shot, line.substring(line.indexOf('>') + 1)); // skip take number
+            shots.add(shot);
             line = scan.nextLine();
         }
-        return n;
+        return shots;
     }
 
     private static void readParts(Set s) {
