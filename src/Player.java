@@ -69,6 +69,7 @@ package src;
  */
 
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 
 public class Player extends GUIElement {
     
@@ -79,17 +80,23 @@ public class Player extends GUIElement {
     private int rehearsalChips = 0;
     private Area currentArea;
     private Role currentRole = null;
-    private ViewHandler view = ViewHandler.getInstance();
+    private Controller controller;
 
-    public Player(String name, int rank, int credits) {
+    public Player(String name, int rank, int credits, String path) {
         this.name = name;
         this.rank = rank;
         this.credits = credits;
+        this.controller = Controller.getInstance();
+        this.image = new ImageIcon(getClass().getResource(path));
+        this.x = 20;
+        this.y = 20;
+        this.width = 40;
+        this.height = 40;
     }
 
     public void playTurn() {
-        view.print("\nIt is now " + name + "'s turn. Rank: " + rank + ", Credits: " + credits + ", Dollars: " + dollars);
-        view.print("\nYour current location is the " + currentArea.getName() + ".");
+        controller.displayMessage("\nIt is now " + name + "'s turn. Rank: " + rank + ", Credits: " + credits + ", Dollars: " + dollars);
+        controller.displayMessage("\nYour current location is the " + currentArea.getName() + ".");
         if (currentRole != null) {
             work();
         } else {
@@ -100,8 +107,8 @@ public class Player extends GUIElement {
     private void move() {
         int input;
         do {
-            view.print("Would you like to move?\n\t0: Yes\n\t1: No\n\t2: View board");
-            input = view.readOption(2);
+            controller.displayMessage("Would you like to move?\n\t0: Yes\n\t1: No\n\t2: View board");
+            input = controller.getOption(2);
             if (input == 2) {
                 Board.getInstance().printBoard();
             }
@@ -109,17 +116,17 @@ public class Player extends GUIElement {
 
         if (input == 0) {
             ArrayList<String> neighbors = currentArea.getNeighbors();
-            view.print("\nSelect a neighboring area to move to:");
-            view.print("\t0: Remain at current location");
+            controller.displayMessage("\nSelect a neighboring area to move to:");
+            controller.displayMessage("\t0: Remain at current location");
             for (String neighbor : neighbors) {
-                view.print("\t" + (neighbors.indexOf(neighbor) + 1) + ": " + neighbor);
+                controller.displayMessage("\t" + (neighbors.indexOf(neighbor) + 1) + ": " + neighbor);
             }
-            input = view.readOption(neighbors.size());
+            input = controller.getOption(neighbors.size());
             if (input == 0) {
-                view.print("\nYour location remains at the " + currentArea.getName() + ".");
+                controller.displayMessage("\nYour location remains at the " + currentArea.getName() + ".");
             } else {
                 currentArea = Board.getInstance().getArea(neighbors.get(input - 1));
-                view.print("\nYou have moved to the " + currentArea.getName() + ".");
+                controller.displayMessage("\nYou have moved to the " + currentArea.getName() + ".");
             }
         }
 
@@ -127,7 +134,7 @@ public class Player extends GUIElement {
             if (((Set)currentArea).getScene() != null) {
                 takeRole(((Set)currentArea).getAvailableRoles());
             } else {
-                view.print("Today's scene in this area has already completed");
+                controller.displayMessage("Today's scene in this area has already completed");
             }
         } else if (currentArea.getName() == "office") {
             upgrade();
@@ -135,34 +142,34 @@ public class Player extends GUIElement {
     }
 
     private void upgrade() {
-        view.print("Would you like to upgrade your rank?\n\t0: Yes\n\t1: No");
-        int input = view.readOption(1);
+        controller.displayMessage("Would you like to upgrade your rank?\n\t0: Yes\n\t1: No");
+        int input = controller.getOption(1);
         if (input == 1) {
             return;
         }
         Office office = ((Office)currentArea);
-        view.print("\nCurrent rank: " + rank + ", Credits: " + credits + ", Dollars: " + dollars);
-        view.print("Select an upgrade to purchase:");
-        view.print("\t0: Cancel upgrade");
+        controller.displayMessage("\nCurrent rank: " + rank + ", Credits: " + credits + ", Dollars: " + dollars);
+        controller.displayMessage("Select an upgrade to purchase:");
+        controller.displayMessage("\t0: Cancel upgrade");
         for (int i = 1; i <= 10; i++) {
             if (i == 6) {
-                view.print("\t-----------------------");
+                controller.displayMessage("\t-----------------------");
             }
-            view.print("\t" + i + ": " + office.getUpgrade(i).toString());
+            controller.displayMessage("\t" + i + ": " + office.getUpgrade(i).toString());
         }
 
-        input = view.readOption(10);
+        input = controller.getOption(10);
         Upgrade upgrade = office.getUpgrade(input);
         int level = upgrade.getLevel();
         int cost = upgrade.getAmt();
         String type = upgrade.getCurType();
         if (upgrade.getLevel() <= this.rank) {
-            view.print("\nThat rank is equal or below yours...");
+            controller.displayMessage("\nThat rank is equal or below yours...");
         } else if (type.equals("dollar") && !office.validateUpgrade(input, dollars) ||
                     type.equals("credits") && !office.validateUpgrade(input, credits)) {
-            view.print("\nYou cannot afford that upgrade...");
+            controller.displayMessage("\nYou cannot afford that upgrade...");
         } else {
-            view.print("\nYou have upgraded to Rank " + level + "!");
+            controller.displayMessage("\nYou have upgraded to Rank " + level + "!");
             this.rank = level;
             if (type.equals("dollar")) {
                 dollars -= cost;
@@ -174,27 +181,27 @@ public class Player extends GUIElement {
 
     private void takeRole(ArrayList<Role> roles) {
         if (roles.size() == 0) {
-            view.print("No available roles at current location");
+            controller.displayMessage("No available roles at current location");
         } else {
-            view.print("\nSelect a role to take:"); 
-            view.print("\t0: Don't take role");
+            controller.displayMessage("\nSelect a role to take:"); 
+            controller.displayMessage("\t0: Don't take role");
             for (Role role : roles) {
                 if (role.checkOnCard()) {
-                    view.print("\t" + (roles.indexOf(role) + 1) + ": " + role.toString() + " (On Card)");
+                    controller.displayMessage("\t" + (roles.indexOf(role) + 1) + ": " + role.toString() + " (On Card)");
                 } else {
-                    view.print("\t" + (roles.indexOf(role) + 1) + ": " + role.toString() + " (Off Card)");
+                    controller.displayMessage("\t" + (roles.indexOf(role) + 1) + ": " + role.toString() + " (Off Card)");
                 }
             }
-            int input = view.readOption(roles.size());
+            int input = controller.getOption(roles.size());
             if (input == 0) {
-                view.print("\nYou chose not to take a role.");
+                controller.displayMessage("\nYou chose not to take a role.");
             } else { 
                 Role role = roles.get(input - 1);
                 if (role.takeRole(this)) {
                     currentRole = role;
-                    view.print("\nYou have taken the role of " + currentRole.getName() + ".");
+                    controller.displayMessage("\nYou have taken the role of " + currentRole.getName() + ".");
                 } else {
-                    view.print("\nInsufficient rank to take that role...");
+                    controller.displayMessage("\nInsufficient rank to take that role...");
                 }
             }
         }
@@ -202,11 +209,11 @@ public class Player extends GUIElement {
 
     private void work() {
         //TODO: Display more information about current role
-        view.print("You are working for the scene " + ((Set)currentArea).getScene().toString() + ".");
-        view.print("Your role is " + currentRole.getName() + " and you have " + rehearsalChips + " rehearsal chips.");
-        view.print("Shots remaining: " + ((Set)currentArea).getShotsRemaining());
-        view.print("\nWhat would you like to do?\n\t0: Rehearse\n\t1: Act");
-        int input = view.readOption(1);
+        controller.displayMessage("You are working for the scene " + ((Set)currentArea).getScene().toString() + ".");
+        controller.displayMessage("Your role is " + currentRole.getName() + " and you have " + rehearsalChips + " rehearsal chips.");
+        controller.displayMessage("Shots remaining: " + ((Set)currentArea).getShotsRemaining());
+        controller.displayMessage("\nWhat would you like to do?\n\t0: Rehearse\n\t1: Act");
+        int input = controller.getOption(1);
         if (input == 0) {
             rehearse();
         } else {
@@ -215,29 +222,29 @@ public class Player extends GUIElement {
     }
 
     private void rehearse() {
-        view.print("\nYou chose to rehearse. You have gained 1 rehearsal chip.");
+        controller.displayMessage("\nYou chose to rehearse. You have gained 1 rehearsal chip.");
         rehearsalChips++;
     }
 
     private void act() {
         if (((Set)currentArea).shoot(rehearsalChips)) {
-            view.print("\nYour acting was a success!");
+            controller.displayMessage("\nYour acting was a success!");
             if (currentRole.checkOnCard()) {
-                view.print("You gained 2 credits for succeeding at on card role.");
+                controller.displayMessage("You gained 2 credits for succeeding at on card role.");
                 credits += 2;
             } else {
-                view.print("You gained 1 credit and 1 dollar for succeeding at off card role!");
+                controller.displayMessage("You gained 1 credit and 1 dollar for succeeding at off card role!");
                 credits++;
                 dollars++;
             }
             if (((Set)currentArea).getShotsRemaining() == 0) {
-                view.print("\nScene completed!");
+                controller.displayMessage("\nScene completed!");
                 ((Set)currentArea).wrap();
             }
         } else {
-            view.print("Your attempt to act failed...");
+            controller.displayMessage("Your attempt to act failed...");
             if (!currentRole.checkOnCard()) {
-                view.print("You gained 1 dollar for failing at off card role...");
+                controller.displayMessage("You gained 1 dollar for failing at off card role...");
                 dollars++;
             }
         }

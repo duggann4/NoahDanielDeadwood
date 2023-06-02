@@ -206,9 +206,9 @@ public class Set extends GUIElement implements Area {
     }
 
     private void payout(ArrayList<Role> rolesOnCard, ArrayList<Role> rolesOffCard) {
-        ViewHandler view = ViewHandler.getInstance();
+        Controller controller = Controller.getInstance();
         if (rolesOnCard.size() > 0) {
-            view.print("\n\tPayout:\n\t-------");
+            controller.displayMessage("\n\tPayout:\n\t-------");
             ArrayList<Integer> diceRolls = new ArrayList<Integer>();
             for (int i = 0; i < currentScene.getBudget(); i++) {
                 diceRolls.add(rollDice(1, 6));
@@ -223,14 +223,14 @@ public class Set extends GUIElement implements Area {
                 Player player = rolesOnCard.get(playerNum).getPlayer();
                 player.addDollars(roll);
                 playerNum++;
-                view.print("\t" + player.getName() + " Gained " + roll + " Dollars!");
+                controller.displayMessage("\t" + player.getName() + " Gained " + roll + " Dollars!");
             }
             for (Role role : rolesOffCard) {
                 role.getPlayer().addDollars(role.getRank());
-                view.print("\t" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
+                controller.displayMessage("\t" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
             }
         } else {
-            view.print("No players acting on any on card roles, so no bonus pay...");
+            controller.displayMessage("No players acting on any on card roles, so no bonus pay...");
         }
     }
 
