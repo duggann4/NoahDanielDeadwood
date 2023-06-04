@@ -6,7 +6,7 @@ package src;
 
 /**
  * Title: BoardParser
- * Author: Noah Duggan Erickson
+ * Author: Noah Duggan Erickson, Daniel Wertz
  * CSCI 345
  * Spring 2023
  * 

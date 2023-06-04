@@ -76,12 +76,12 @@ package src;
  *          line - line of the board.xml file
  *              to parse into an upgrade object
  * 
- *  public boolean validateUpgrade(int option, int amount)
+ *  public boolean validateUpgrade(Upgrade upgrade, int amount)
  *      Checks if user has enough of the corrisponding currency type
  *          to pay for upgrade
  *      Author: Daniel Wertz
  *      Parameters:
- *          option - key for upgrade in HashMap
+ *          upgrade - Upgrade to check
  *          amount - Player's currency 
  *      Returns:
  *          true if user can afford upgrade
@@ -132,8 +132,7 @@ public class Office extends GUIElement implements Area {
         instance.upgrades.put(upgrades.size() + 1, upgrade);
     }
 
-    public boolean validateUpgrade(int option, int amount) {
-        Upgrade upgrade = upgrades.get(option);
+    public boolean validateUpgrade(Upgrade upgrade, int amount) {
         return upgrade.getAmt() <= amount;
     }
 

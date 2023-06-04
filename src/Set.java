@@ -6,7 +6,8 @@ package src;
  * CSCI 345
  * Spring 2023
  * 
- * DESCRIPTION: TODO: description
+ * DESCRIPTION: Handles set stuff
+ * 
  * CONSTRUCTORS:
  *  public Set()
  *      Creates a new Scene object with non-null but empty field values
@@ -149,6 +150,9 @@ public class Set extends GUIElement implements Area {
 
     public void setScene(Scene scene) {
         currentScene = scene;
+        currentScene.setX(x);
+        currentScene.setY(y);
+        currentScene.updateRolePositions();
     }
 
     public void addNeighbor(String name) {
@@ -206,9 +210,12 @@ public class Set extends GUIElement implements Area {
     }
 
     private void payout(ArrayList<Role> rolesOnCard, ArrayList<Role> rolesOffCard) {
-        ViewHandler view = ViewHandler.getInstance();
+        Controller controller = Controller.getInstance();
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("Continue");
+        String prompt = "Scene complete!";
         if (rolesOnCard.size() > 0) {
-            view.print("\n\tPayout:\n\t-------");
+            prompt = prompt.concat("\n\nPayout:\n-------------------------------------");
             ArrayList<Integer> diceRolls = new ArrayList<Integer>();
             for (int i = 0; i < currentScene.getBudget(); i++) {
                 diceRolls.add(rollDice(1, 6));
@@ -223,15 +230,16 @@ public class Set extends GUIElement implements Area {
                 Player player = rolesOnCard.get(playerNum).getPlayer();
                 player.addDollars(roll);
                 playerNum++;
-                view.print("\t" + player.getName() + " Gained " + roll + " Dollars!");
+                prompt = prompt.concat("\n" + player.getName() + " Gained " + roll + " Dollars!");
             }
             for (Role role : rolesOffCard) {
                 role.getPlayer().addDollars(role.getRank());
-                view.print("\t" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
+                prompt = prompt.concat("\n" + role.getPlayer().getName() + " Gained " + role.getRank() + " Dollars!");
             }
         } else {
-            view.print("No players acting on any on card roles, so no bonus pay...");
+            prompt = prompt.concat("\nNo bonus pay...");
         }
+        controller.getOption(options, prompt);
     }
 
     private int rollDice(int rolls, int sides) {
@@ -265,6 +273,10 @@ public class Set extends GUIElement implements Area {
             }
         }
         return n;
+    }
+
+    public ArrayList<Shot> getShots() {
+        return shots;
     }
 
     public String getName() {
