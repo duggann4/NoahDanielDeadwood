@@ -82,6 +82,9 @@ public class Trailer extends GUIElement implements Area {
     public String getName() {
         return "trailer";
     }
+    public void addNeighbor(String name) {
+        instance.neighbors.add(name);
+    }
     public ArrayList<String> getNeighbors() {
         return instance.neighbors;
     }
@@ -90,9 +93,6 @@ public class Trailer extends GUIElement implements Area {
     }
     public String toString() {
         return "trailer";
-    }
-    public void addNeighbor(String name) {
-        instance.neighbors.add(name);
     }
     public static Trailer getInstance() {
         return instance;

@@ -47,11 +47,6 @@ package src;
  *      Returns:
  *          Area object with the given name
  * 
- *  public void printBoard()
- *      Prints the Areas on the board and information on their 
- *          neighbors, scenes, and players.
- *      Author: Daniel Wertz
- * 
  *  public static Board getInstance()
  *      Returns singleton instance of Board.
  *      Author: Daniel Wertz
@@ -129,22 +124,6 @@ public class Board {
             }
         }
         return null;
-    }
-
-    public void printBoard() {
-        System.out.println();
-        for (Area area : areas) {
-            System.out.println(area.getName() + "\n\tNeighbors: " + area.getNeighbors());
-            if (area instanceof Set) {
-                if (((Set)area).getScene() != null) {
-                    System.out.println("\tActive Scene: " + ((Set)area).getScene().toString());
-                } else {
-                    System.out.println("\tActive Scene: None (completed)");
-                }
-                    
-            }
-        }
-        System.out.println();
     }
 
     public static Board getInstance() {

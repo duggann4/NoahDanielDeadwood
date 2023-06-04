@@ -33,7 +33,7 @@ import javax.swing.ImageIcon;
 
 public class Shot extends GUIElement {
 
-    boolean shotComplete;
+    private boolean shotComplete;
 
     public Shot() {
         shotComplete = false;

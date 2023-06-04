@@ -140,6 +140,7 @@ public class Set extends GUIElement implements Area {
         currentScene = null;
         offRoles = new ArrayList<Role>();
     }
+    
     public void setName(String name) {
         this.name = name;
     }
