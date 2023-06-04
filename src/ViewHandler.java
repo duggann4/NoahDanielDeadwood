@@ -33,8 +33,10 @@ import java.awt.event.ActionListener;
 
 
 public class ViewHandler extends JPanel {
-    private static JFrame frame;
+    private static Controller controller;
+    private static ActionListener buttonListener;
     private static ImageIcon backgroundImage;
+    private static JFrame frame;
     private static JLabel promptLabel;
     private static JPanel buttonPanel;
     private static JPanel playerInfoPanel;
@@ -43,8 +45,7 @@ public class ViewHandler extends JPanel {
     private static JPanel playerTextPanel;
     private static JPanel sidePanel;
     private static JPanel mainPanel;
-    private static ActionListener buttonListener;
-    private static Controller controller;
+
 
     public ViewHandler(Controller controller) {
         this.controller = controller;
@@ -145,7 +146,7 @@ public class ViewHandler extends JPanel {
         button.addActionListener(e -> {
             JButton source = (JButton) e.getSource();
             String buttonText = source.getText();
-            handleButtonClick(buttonText);
+            buttonClick(buttonText);
         });
 
         Font newFont = button.getFont().deriveFont(Font.PLAIN, 12f);
@@ -196,7 +197,7 @@ public class ViewHandler extends JPanel {
         promptLabel.setText("<html>" + prompt.replace("\n", "<br>") + "</html>");
     }
 
-    public void handleButtonClick(String buttonText) {
+    public void buttonClick(String buttonText) {
         controller.setSelectedOption(buttonText);
     }
 }

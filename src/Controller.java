@@ -4,24 +4,16 @@ import java.util.ArrayList;
 
 public class Controller {
     
-    private Board board;
     private ViewHandler view;
+    private Board board;
     private ArrayList<Player> playerList;
     private String selectedOption;
     private Player currentPlayer;
-
     private static Controller instance;
 
     private Controller() {
         board = Board.getInstance();
         view = new ViewHandler(this);
-    }
-
-    public static Controller getInstance() {
-        if (instance == null) {
-            instance = new Controller();
-        }
-        return instance;
     }
 
     public String getOption(ArrayList<String> options, String prompt) {
@@ -75,5 +67,12 @@ public class Controller {
 
     public ArrayList<Area> getAreas() {
         return board.getAreas();
+    }
+
+    public static Controller getInstance() {
+        if (instance == null) {
+            instance = new Controller();
+        }
+        return instance;
     }
 }
