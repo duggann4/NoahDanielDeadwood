@@ -7,77 +7,92 @@ package src;
  * Spring 2023
  * 
  * DESCRIPTION:
- *  Singleton that provides methods for input and output handling.
+ *  Handles GUI responsibilities and communicates changes to Controller.
+ * 
+ * CONSTRUCTORS:
+ *  public ViewHandler()
+ *      Initializes JFrame and all element within.
+ *      Links ViewHandler to Controller;
+ *      Author: Daniel Wertz
  * 
  * METHODS:
- *  public int readOption(int maxOption)
- *      Gets user input between 0 and maxOption
- *      Author: Daniel Wertz
- *      Returns:
- *          User's option
- * 
- *  public String readString()
- *      Gets a line of user input as a String
- *      Author: Daniel Wertz
- *      Returns:
- *          User's input as a String
- * 
- *  public void print(String string)
- *      Prints the given string to the console
- *      Author: Daniel Wertz
- *      Parameters:
- *          string - the string to print
  * 
  *  public static ViewHandler getInstance()
  *      Gets the singleton instance of the ViewHandler
  *      Author: Daniel Wertz
  *      Returns:
  *          ViewHandler object
- * 
- * INHERITED METHODS:
- *  Standard java.lang.Object inheritance
  */
 
-import java.util.Scanner;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.Dimension;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 
 public class ViewHandler extends JPanel {
-
     private static JFrame frame;
     private static ImageIcon backgroundImage;
-    private static Scanner scanner = new Scanner(System.in);
-    private static Board board = Board.getInstance();
-    private static ArrayList<Player> playerList = new ArrayList<>();
+    private static JLabel promptLabel;
+    private static JPanel buttonPanel;
+    private static JPanel playerInfoPanel;
+    private static JPanel playerHeadingPanel;
+    private static JPanel playerImagePanel;
+    private static JPanel playerTextPanel;
+    private static JPanel sidePanel;
+    private static JPanel mainPanel;
+    private static ActionListener buttonListener;
+    private static Controller controller;
 
-    private static ViewHandler instance;
-
-    private ViewHandler() {
+    public ViewHandler(Controller controller) {
+        this.controller = controller;
         backgroundImage = new ImageIcon(getClass().getResource("../img/board.jpg"));
 
         frame = new JFrame("Deadwood");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Create the main panel
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.setPreferredSize(new Dimension(1200, 900));
         mainPanel.add(this, BorderLayout.CENTER);
 
-        // Create the side panel for text and buttons
-        JPanel sidePanel = new JPanel();
-        sidePanel.setPreferredSize(new Dimension(500, 900));
+        sidePanel = new JPanel();
+        sidePanel.setPreferredSize(new Dimension(400, 900));
+        sidePanel.setLayout(new BorderLayout());
+        sidePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Add the main panel and side panel to the frame
+        promptLabel = new JLabel();
+        promptLabel.setFont(promptLabel.getFont().deriveFont(promptLabel.getFont().getSize() + 11f));
+        promptLabel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+        promptLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        sidePanel.add(promptLabel, BorderLayout.NORTH);
+
+        buttonPanel = new JPanel();
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        sidePanel.add(buttonPanel, BorderLayout.CENTER);
+
+        playerInfoPanel = new JPanel();
+        playerInfoPanel.setLayout(new BorderLayout());
+        playerInfoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        playerHeadingPanel = new JPanel();
+
+        playerImagePanel = new JPanel();
+
+        playerTextPanel = new JPanel();
+
+        playerInfoPanel.add(playerHeadingPanel, BorderLayout.NORTH);
+        playerInfoPanel.add(playerImagePanel, BorderLayout.CENTER);
+        playerInfoPanel.add(playerTextPanel, BorderLayout.SOUTH);
+
+        sidePanel.add(playerInfoPanel, BorderLayout.SOUTH);
+
         frame.add(mainPanel, BorderLayout.CENTER);
         frame.add(sidePanel, BorderLayout.LINE_END);
-
+        frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
     }
@@ -85,49 +100,103 @@ public class ViewHandler extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-        // Draw the background image
+
+        // Background
         g.drawImage(backgroundImage.getImage(), 0, 0, getWidth(), getHeight(), this);
 
-        for (Player player : playerList) {
-            g.drawImage(player.getImageIcon().getImage(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), this);
+        // Shots
+        for (Area area : controller.getAreas()) {
+            if (area instanceof Set) {
+                Set set = (Set) area;
+                for (Shot shot : set.getShots()) {
+                    if (!shot.checkComplete()) {
+                        g.drawImage(shot.getImageIcon().getImage(), shot.getX(), shot.getY(), shot.getWidth(), shot.getHeight(), this);
+                    }
+                }
+            }
+        }
+
+        // Scenes
+        for (Scene scene : controller.getActiveScenes()) {
+            g.drawImage(scene.getImageIcon().getImage(), scene.getX(), scene.getY(), scene.getWidth(), scene.getHeight(), this);
+        }
+
+        // Players
+        if (controller.getPlayers() != null) {
+            for (Player player : controller.getPlayers()) {
+                for (Player otherPlayer : controller.getPlayers()) { // offset position if players are in same spot
+                    if (player != otherPlayer && player.getX() == otherPlayer.getX() && player.getY() == otherPlayer.getY()) {
+                        player.setX(player.getX() + 20);
+                    }
+                }
+                g.drawImage(player.getImageIcon().getImage(), player.getX(), player.getY(), player.getWidth(), player.getHeight(), this);
+            }
         }
     }
 
-    public void addPlayers(ArrayList<Player> players) {
-        playerList = players;
-        repaint();
-    }
-
-    public int readOption(int maxOption) {
-        int input;
-        do {
-            System.out.print("> ");
-            while (!scanner.hasNextInt()) {
-                print("Invalid input. Enter an integer (0 - " + maxOption + ")");
-                scanner.next();
-            }
-            input = scanner.nextInt();
-            if (input < 0 || input > maxOption) {
-                print("Invalid input. Enter an integer (0 - " + maxOption + ")");
-            }
-        } while (input < 0 || input > maxOption);
-        return input;
-    }
-
-    public String readString() {
-        System.out.print("> ");
-        return scanner.nextLine();
-    }
-
-    public void print(String string) {
-        System.out.println(string);
-    }
-
-    public static ViewHandler getInstance() {
-        if (instance == null) {
-            instance = new ViewHandler();
+    public void addButtons(ArrayList<String> options) {
+        for (String option : options) {
+            addButton(option);
         }
-        return instance;
+    }
+
+    private void addButton(String option) {
+        JButton button = new JButton(option);
+        button.addActionListener(e -> {
+            JButton source = (JButton) e.getSource();
+            String buttonText = source.getText();
+            handleButtonClick(buttonText);
+        });
+
+        Font newFont = button.getFont().deriveFont(Font.PLAIN, 12f);
+        button.setFont(newFont);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        Insets buttonPadding = new Insets(10, 20, 10, 20);
+        button.setMargin(buttonPadding);
+
+        buttonPanel.add(button);
+        buttonPanel.add(Box.createVerticalStrut(10));
+        buttonPanel.revalidate();
+    }
+
+    public void clearButtons() {
+        buttonPanel.removeAll();
+        buttonPanel.revalidate();
+        buttonPanel.repaint();
+    }
+
+    public void setActivePlayer(Player player) {
+        JLabel playerHeading = new JLabel("Current Player - " + player.getName());
+        playerHeading.setFont(playerHeading.getFont().deriveFont(Font.BOLD, 20f));
+        playerHeadingPanel.removeAll();
+        playerHeadingPanel.add(playerHeading);
+
+        JLabel playerImage = new JLabel(new ImageIcon(player.getImageIcon().getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH)));
+        playerImagePanel.removeAll();
+        playerImagePanel.add(playerImage);
+
+        JLabel playerText = new JLabel();
+        playerText.setFont(playerHeading.getFont().deriveFont(Font.PLAIN, 15f));
+        playerText.setText("<html>" + player.toString().replace("\n", "<br>") + "</html>");
+        playerTextPanel.removeAll();
+        playerTextPanel.add(playerText);
+
+        playerInfoPanel.removeAll();
+        playerInfoPanel.add(playerHeadingPanel, BorderLayout.NORTH);
+        playerInfoPanel.add(playerImagePanel, BorderLayout.CENTER);
+        playerInfoPanel.add(playerTextPanel, BorderLayout.SOUTH);
+
+        mainPanel.repaint();
+        sidePanel.revalidate();
+        sidePanel.repaint();
+    }
+
+    public void setPrompt(String prompt) {
+        promptLabel.setText("<html>" + prompt.replace("\n", "<br>") + "</html>");
+    }
+
+    public void handleButtonClick(String buttonText) {
+        controller.setSelectedOption(buttonText);
     }
 }

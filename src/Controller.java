@@ -4,14 +4,17 @@ import java.util.ArrayList;
 
 public class Controller {
     
-    private static Board board;
-    private static ViewHandler view;
-    private static ArrayList<Player> playerList;
+    private Board board;
+    private ViewHandler view;
+    private ArrayList<Player> playerList;
+    private String selectedOption;
+    private Player currentPlayer;
+
     private static Controller instance;
 
     private Controller() {
         board = Board.getInstance();
-        view = ViewHandler.getInstance();
+        view = new ViewHandler(this);
     }
 
     public static Controller getInstance() {
@@ -21,20 +24,56 @@ public class Controller {
         return instance;
     }
 
-    public static void addPlayers(ArrayList<Player> players) {
+    public String getOption(ArrayList<String> options, String prompt) {
+        updateOptions(options, prompt);
+        // Wait for the option to be selected
+        while (selectedOption == null) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        String selected = selectedOption;
+        selectedOption = null;
+        return selected;
+    }
+
+    public void updateOptions(ArrayList<String> options, String prompt) {
+        view.clearButtons();
+        view.addButtons(options);
+        view.setPrompt(prompt);
+    }
+
+    public void updateGUI() {
+        view.repaint();
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return playerList;
+    }
+
+    public void addPlayers(ArrayList<Player> players) {
         playerList = players;
-        view.addPlayers(players);
     }
 
-    public static void displayMessage(String string) {
-        view.print(string);
+    public void setCurrentPlayer(Player player) {
+        view.setActivePlayer(player);
     }
 
-    public static int getOption(int maxOption) {
-        return view.readOption(maxOption);
+    public void setSelectedOption(String option) {
+        selectedOption = option;
     }
 
-    public static String getString() {
-        return view.readString();
+    public String getSelectedOption() {
+        return selectedOption;
+    }
+
+    public ArrayList<Scene> getActiveScenes() {
+        return board.getActiveScenes();
+    }
+
+    public ArrayList<Area> getAreas() {
+        return board.getAreas();
     }
 }

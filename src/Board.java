@@ -21,11 +21,23 @@ package src;
  *      Parameters:
  *          scene - the scene to remove
  * 
+ *  public Area getActiveScenes()
+ *      Returns list of active scenes
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.activeScenes
+ * 
  *  public int getActiveSceneCount()
  *      Returns the number of active scenes on the board.
  *      Author: Daniel Wertz
  *      Returns:
  *          the number of active scenes
+ * 
+ *  public Area getAreas()
+ *      Returns list of areas
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          this.areas
  * 
  *  public Area getArea(String areaName)
  *      Returns the area with the given name.
@@ -98,8 +110,16 @@ public class Board {
         activeScenes.remove(scene);
     }
 
+    public ArrayList<Scene> getActiveScenes() {
+        return activeScenes;
+    }
+
     public int getActiveSceneCount() {
         return activeScenes.size();
+    }
+
+    public ArrayList<Area> getAreas() {
+        return areas;
     }
 
     public Area getArea(String areaName) {

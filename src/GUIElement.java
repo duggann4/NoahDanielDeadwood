@@ -12,17 +12,11 @@ package src;
  *      and methods to adjust them.
  * 
  * METHODS:
- *  public PImage getImage()
+ *  public ImageIcon getImageIcon()
  *      Returns the related image if element has one.
  *      Author: Daniel Wertz
  *      Returns:
  *          this.image
- * 
- *  public void setImage(PImage image)
- *      Sets an image for the GUI element, null by default
- *      Author: Daniel Wertz
- *      Parameters:
- *          image - image representing element
  * 
  *  public int getX()
  *      Returns X coordinate of element.

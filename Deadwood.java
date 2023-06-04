@@ -13,10 +13,10 @@ import src.*;
  * METHODS:
  *  public static void main(String args[])
  *      This method is the starting point of the program. It first checks
- *      for the number of players provided as a command line argument, then
- *      sets up the game accordingly. It then runs the game until the number 
- *      of days reaches 0, with each day consisting of several turns by each
- *      player. Finally, it scores the game and displays results before closing.
+ *      for the number of players, then sets up the game accordingly. 
+ *      It then runs the game until the number of days reaches 0, with each day 
+ *      consisting of several turns by each player. 
+ *      Finally, it scores the game and displays results before closing.
  */
 
 import java.util.ArrayList;
@@ -29,18 +29,18 @@ public class Deadwood {
     private static ArrayList<Player> players = new ArrayList<>();
     private static Controller controller = Controller.getInstance();
 
-    public static void main(String args[]) {
-        if (args.length == 0) {
-            System.out.println("Must enter number of players as a command line argument");
-            return;
-        }
-        int numPlayers = Integer.parseInt(args[0]);
-        if (numPlayers < 2 || numPlayers > 8) {
-            System.out.println("Number of players must be between 2 and 8.");
-            return;
-        }
+    public static void main(String[] args) {
 
-        setup(numPlayers);
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("2");
+        options.add("3");
+        options.add("4");
+        options.add("5");
+        options.add("6");
+        options.add("7");
+        int input = Integer.parseInt(controller.getOption(options, "How many players?"));
+        setup(input);
+
         controller.addPlayers(players);
 
         for(int day = 1; day <= numberOfDays; day++) {
@@ -50,7 +50,6 @@ public class Deadwood {
     }
 
     private static void setup(int numPlayers) {
-        welcomeMessage();
         createPlayers(numPlayers);
         Collections.shuffle(players);
 
@@ -63,12 +62,8 @@ public class Deadwood {
 
         for(Player player : players) {
             player.setArea(board.getArea("trailer"));
+            player.updatePosition();
         }
-    }
-
-    private static void welcomeMessage() {
-        // TODO: Add proper welcome message
-        controller.displayMessage("Hello! Welcome to Deadwood and stuff!");
     }
 
     private static void createPlayers(int numPlayers) {
@@ -82,79 +77,90 @@ public class Deadwood {
             rank = 2;
         }
         for (int i = 0; i < numPlayers; i++) {
-            controller.displayMessage("\nEnter name for player " + (i+1) + ":");
-            String name = controller.getString();
-            String imageName = null;
+            String name = "Player " + (i+1);
+            String diceColor = null;
             switch (i) {
                 case 0:
-                    imageName = "b1.png";
+                    diceColor = "b";
                     break;
                 case 1:
-                    imageName = "c1.png";
+                    diceColor = "c";
                     break;
                 case 2:
-                    imageName = "g1.png";
+                    diceColor = "g";
                     break;
                 case 3:
-                    imageName = "o1.png";
+                    diceColor = "o";
                     break;
                 case 4:
-                    imageName = "p1.png";
+                    diceColor = "p";
                     break;
                 case 5:
-                    imageName = "r1.png";
+                    diceColor = "r";
                     break;
                 case 6:
-                    imageName = "v1.png";
+                    diceColor = "v";
                     break;
                 case 7:
-                    imageName = "y1.png";
+                    diceColor = "y";
                     break;
             }
 
-            players.add(new Player(name, rank, credits, "../img/dice/" + imageName));
+            players.add(new Player(name, rank, credits, diceColor));
         }
     }
 
     private static void playDay(int day) {
-        controller.displayMessage("\n==================== Start Day " + day + " ====================");
         while (board.getActiveSceneCount() > 1) {
             for (Player player : players) {
+                controller.setCurrentPlayer(player);
                 player.playTurn();
-                controller.displayMessage("\n-------------------- Ending Turn --------------------");
                 if (board.getActiveSceneCount() <= 1) {
                     break;
                 }
             }
         }
-        endDay();
+        endDay(day);
     }
 
-    private static void endDay() {
+    private static void endDay(int day) {
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("Continue");
+        String prompt;
+        if (day != numberOfDays) {
+            prompt = "Day " + day + " has completed, all actors will return to their trailers.\n\n" + "Remaining days: " + (numberOfDays - day);
+        } else {
+            prompt = "The final day has ended.";
+        }
+        controller.getOption(options, prompt);
         for (Player player : players) {
             player.setArea(board.getArea("trailer"));
             player.removeRole();
+            player.updatePosition();
         }
         board.placeNewScenes();
     }
 
     private static void endGame() {
-        controller.displayMessage("\n==================== Ending Final Day ====================");
         score();
+        System.exit(0);
     }
 
     private static void score() {
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("Exit");
+        String prompt = "Score Board\n--------------------------------";
         int highScore = 0;
         Player winner = null;
-        controller.displayMessage("\n\tScore Board:\n\t------------");
         for (Player player : players) {
             int score = player.getScore();
-            controller.displayMessage("\t" + player.getName() + " scored " + score + " points.");
+            prompt = prompt.concat("\n" + player.getName() + " scored " + score + " points.");
             if (score > highScore) {
                 highScore = score;
                 winner = player;
             }
         }
-        controller.displayMessage("\nCongratulations " + winner.getName() + ", you won!\n");
+        prompt = prompt.concat("\n\nThe winner is " + winner.getName() + "!");
+        controller.getOption(options, prompt);
     }
 }

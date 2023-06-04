@@ -28,12 +28,16 @@ package src;
  *      Returns:
  *          Completion status of the shot
  */
+
+import javax.swing.ImageIcon;
+
 public class Shot extends GUIElement {
 
     boolean shotComplete;
 
     public Shot() {
         shotComplete = false;
+        image = new ImageIcon(getClass().getResource("../img/shot.png"));
     }
     
     public void setComplete(boolean complete) {

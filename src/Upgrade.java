@@ -2,7 +2,7 @@ package src;
 
 /**
  * Title: Role
- * Author: Noah Duggan Erickson
+ * Author: Noah Duggan Erickson, Daniel Wertz
  * CSCI 345
  * Spring 2023
  * 
@@ -76,6 +76,6 @@ public class Upgrade { // implements Comparable<Player>?
     }
 
     public String toString() {
-        return ("Rank - " + level + ", " + amt + " " + curType + "s");
+        return ("Rank " + level + " - " + amt + " " + curType + "s");
     }
 }

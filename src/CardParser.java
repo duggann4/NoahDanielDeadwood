@@ -2,7 +2,7 @@ package src;
 
 /**
  * Title: CardParser
- * Author: Noah Duggan Erickson
+ * Author: Noah Duggan Erickson, Daniel Wertz
  * CSCI 345
  * Spring 2023
  * 
@@ -52,19 +52,21 @@ public class CardParser extends Parser{
 
     public static ArrayList<Scene> readCards() {
         ArrayList<Scene> out = new ArrayList<Scene>();
+        int i = 1;
         while (scan.hasNextLine()) {
             String line = scan.nextLine().strip();
             if (line.contains("<card ")) {
-                out.add(readCard(line));
+                out.add(readCard(line, i));
+                i++;
             }
         }
         return out;
     }
 
-    private static Scene readCard(String line) {
+    private static Scene readCard(String line, int cardNum) {
         Scene s = new Scene();
         String[] attrs = line.split("\"");
-        s.setBasic(attrs[1], Integer.parseInt(attrs[5]));
+        s.setBasic(attrs[1], Integer.parseInt(attrs[5]), cardNum);
         String area = null;
 
         while (!line.contains("</card>")) {

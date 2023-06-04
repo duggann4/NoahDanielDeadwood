@@ -2,7 +2,7 @@ package src;
 
 /**
  * Title: Scene
- * Author: Noah Duggan Erickson
+ * Author: Noah Duggan Erickson, Daniel Wertz
  * CSCI 345
  * Spring 2023
  * 
@@ -15,12 +15,13 @@ package src;
  *      Author: Noah Duggan Erickson
  * 
  * METHODS:
- *  public void setBasic(String title, int budget)
- *      Overrides the existing values for title and budget, respectively
- *      Author: Noah Duggan Erickson
+ *  public void setBasic(String title, int budget, int imageNum)
+ *      Overrides the existing values for title, budget, image, and revealed image.
+ *      Author: Noah Duggan Erickson, Daniel Wertz
  *      Parameters:
  *          title - the new title of the scene
  *          budget - the new budget of the scene
+ *          imageNum - images number in directory
  * 
  *  public void setFlavor(int sceneNo, String flavor)
  *      Overrides the existing values for sceneNo and flavorText, respectively
@@ -28,6 +29,21 @@ package src;
  *      Parameters:
  *          sceneNo - the new sceneNo of the scene
  *          flavor - the new flavor text of the scene
+ * 
+ *  public void updateRolePositions()
+ *      updates the coordinates of on card roles.
+ *      Use after placing cards.
+ *      Author: Daniel Wertz
+ * 
+ *  public void revealScene()
+ *      Replaces scene image with revelead scene.
+ *      Author: Daniel Wertz
+ * 
+ *  public boolean checkRevealed()
+ *      Check if a scene has been revealed yet.
+ *      Author: Daniel Wertz
+ *      Returns:
+ *          true if scene is revealed
  * 
  *  public void addRole(Role role)
  *      Adds a Role object to the internal collection of roles
@@ -66,6 +82,7 @@ package src;
  */
 
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 // Note to self: This class represents the cards
 public class Scene extends GUIElement {
     private String title;
@@ -73,6 +90,8 @@ public class Scene extends GUIElement {
     private int sceneNo;
     private int budget;
     private ArrayList<Role> onRoles; // on-card
+    private boolean revealed;
+    private ImageIcon revealedImage;
     
     public Scene() {
         title = "";
@@ -80,16 +99,38 @@ public class Scene extends GUIElement {
         sceneNo = 0;
         budget = 0;
         onRoles = new ArrayList<Role>();
+        revealed = false;
+        this.width = 205;
+        this.height = 115;
     }
 
-    public void setBasic(String title, int budget) {
+    public void setBasic(String title, int budget, int imageNum) {
         this.title = title;
         this.budget = budget;
+        this.image = new ImageIcon(getClass().getResource("../img/CardBack-small.jpg"));
+        this.revealedImage = new ImageIcon(getClass().getResource("../img/cards/" + String.format("%02d.png", imageNum)));
     }
     public void setFlavor(int sceneNo, String flavor) {
         this.sceneNo = sceneNo;
         this.flavor = flavor;
     }
+
+    public void updateRolePositions() {
+        for(Role role : onRoles) {
+            role.setX(role.getX() + x);
+            role.setY(role.getY() + y);
+        }
+    }
+
+    public void revealScene() {
+        revealed = true;
+        image = revealedImage;
+    }
+
+    public boolean checkRevealed() {
+        return revealed;
+    }
+
     public void addRole(Role role) {
         onRoles.add(role);
     }
