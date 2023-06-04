@@ -1,7 +1,7 @@
 package src;
 
 /**
- * Title: CardParser
+ * Title: Controller
  * Author: Daniel Wertz
  * CSCI 345
  * Spring 2023
@@ -16,7 +16,7 @@ package src;
  *          The instance of Controller
  * 
  *  public String getOption(options, prompt)
- *      Displays a dialog to user with text buttons, and waits for a choice to be made
+ *      Creates text and buttons using ViewHandler and wait for player to select option.
  *      Parameters:
  *          options: the text to be displayed on the buttons
  *          prompt: the name of the dialog
@@ -24,18 +24,14 @@ package src;
  *          the text of the selected option
  * 
  *  public void updateOptions(options, prompt)
- *      Resets the items in the dialog
+ *      Resets prompt and buttons
  *      Parameters:
  *          options: the text to be displayed on the dialog buttons
  *          prompt: the name of the dialog
  * 
  *  public void updateGUI()
- *      Pushes changes in the dialog to screen
- *  
- *  Getters and setters for the following attributes omitted:
- *      ArrayList<Player> playerList
- *      String selectedOption
- *      Player currentPlayer
+ *      Gets view to push changes to screen
+ * 
  */
 import java.util.ArrayList;
 
