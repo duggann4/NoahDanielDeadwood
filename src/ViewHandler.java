@@ -17,11 +17,34 @@ package src;
  * 
  * METHODS:
  * 
+ *  protected void paintComponent(Graphics g)
+ *      Updates GUI display periodically or on repaint() call
+ * 
  *  public static ViewHandler getInstance()
  *      Gets the singleton instance of the ViewHandler
  *      Author: Daniel Wertz
  *      Returns:
  *          ViewHandler object
+ * 
+ *  public void addButtons(ArrayList<String> options) 
+ *      Adds buttons to button Panel
+ *      Author: Daniel Wertz
+ * 
+ * public void clearButtons()
+ *      Clears buttons in button panel
+ *      Author: Daniel Wertz
+ * 
+ * public setActivePlayer(Player player)
+ *      Changes active player
+ *      Author: Daniel Wertz
+ * 
+ * public void setPrompt(String promt)
+ *      Sets new prompt to be displayed
+ *      Author: Daniel Wertz
+ * 
+ * public void buttonClick(String buttonText)
+ *      Notify controller of which button was clicked
+ *      Author: Daniel Wertz
  */
 
 import javax.swing.*;
