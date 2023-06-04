@@ -1,5 +1,42 @@
 package src;
 
+/**
+ * Title: CardParser
+ * Author: Daniel Wertz
+ * CSCI 345
+ * Spring 2023
+ * 
+ * DESCRIPTION:
+ *  A Singleton class that handles interactions between the model components of the program and the GUI
+ * 
+ * METHODS:
+ *  public static Controller getInstance()
+ *      Artefact of the Singleton design
+ *      Returns:
+ *          The instance of Controller
+ * 
+ *  public String getOption(options, prompt)
+ *      Displays a dialog to user with text buttons, and waits for a choice to be made
+ *      Parameters:
+ *          options: the text to be displayed on the buttons
+ *          prompt: the name of the dialog
+ *      Returns:
+ *          the text of the selected option
+ * 
+ *  public void updateOptions(options, prompt)
+ *      Resets the items in the dialog
+ *      Parameters:
+ *          options: the text to be displayed on the dialog buttons
+ *          prompt: the name of the dialog
+ * 
+ *  public void updateGUI()
+ *      Pushes changes in the dialog to screen
+ *  
+ *  Getters and setters for the following attributes omitted:
+ *      ArrayList<Player> playerList
+ *      String selectedOption
+ *      Player currentPlayer
+ */
 import java.util.ArrayList;
 
 public class Controller {
